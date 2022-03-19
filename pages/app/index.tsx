@@ -4,12 +4,12 @@ import BlurImage from "@/components/BlurImage";
 import Modal from "@/components/Modal";
 import LoadingDots from "@/components/app/loading-dots";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { useDebounce } from "use-debounce";
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod } from "@/types";
+import useUser from "@/lib/useUser";
 
 import type { FormEvent } from "react";
 import type { Site } from "@prisma/client";
@@ -44,11 +44,11 @@ export default function AppIndex() {
 
   const router = useRouter();
 
-  const { data: session } = useSession();
-  const sessionId = session?.user?.id;
+  const { user } = useUser({ redirectTo: "/login" });
+  const userId = user?.id;
 
   const { data: sites } = useSWR<Array<Site>>(
-    sessionId && `/api/site`,
+    userId && `/api/site`,
     fetcher
   );
 
@@ -59,7 +59,7 @@ export default function AppIndex() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: sessionId,
+        userId: userId,
         name: siteNameRef.current?.value,
         subdomain: siteSubdomainRef.current?.value,
         description: siteDescriptionRef.current?.value,
@@ -142,8 +142,8 @@ export default function AppIndex() {
               type="submit"
               disabled={creatingSite || error !== null}
               className={`${creatingSite || error
-                  ? "cursor-not-allowed text-gray-400 bg-gray-50"
-                  : "bg-white text-gray-600 hover:text-black"
+                ? "cursor-not-allowed text-gray-400 bg-gray-50"
+                : "bg-white text-gray-600 hover:text-black"
                 } w-full px-5 py-5 text-sm border-t border-l border-gray-300 rounded-br focus:outline-none focus:ring-0 transition-all ease-in-out duration-150`}
             >
               {creatingSite ? <LoadingDots /> : "CREATE SITE"}

@@ -3,9 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
-import { signOut } from "next-auth/react";
 import Loader from "./Loader";
-import useRequireAuth from "../../lib/useRequireAuth";
+import useUser from "@/lib/useUser";
 
 import type { WithChildren } from "@/types";
 
@@ -26,8 +25,8 @@ export default function Layout({ siteId, children }: LayoutProps) {
     ? router.asPath.split("/")[1]
     : router.asPath.split("/")[3];
 
-  const session = useRequireAuth();
-  if (!session) return <Loader />;
+  const { user, mutateUser } = useUser({ redirectTo: "/login" });
+  if (!user || !user.isLoggedIn) return <Loader />;
 
   return (
     <>
@@ -108,18 +107,16 @@ export default function Layout({ siteId, children }: LayoutProps) {
           <div className="absolute left-0 right-0 top-16 flex justify-center items-center font-cal space-x-16 border-b bg-white border-gray-200">
             <Link href="/" passHref>
               <a
-                className={`border-b-2 ${
-                  tab == "" ? "border-black" : "border-transparent"
-                } py-3`}
+                className={`border-b-2 ${tab == "" ? "border-black" : "border-transparent"
+                  } py-3`}
               >
                 My Sites
               </a>
             </Link>
             <Link href="/settings" passHref>
               <a
-                className={`border-b-2 ${
-                  tab == "settings" ? "border-black" : "border-transparent"
-                } py-3`}
+                className={`border-b-2 ${tab == "settings" ? "border-black" : "border-transparent"
+                  } py-3`}
               >
                 Settings
               </a>
@@ -137,27 +134,24 @@ export default function Layout({ siteId, children }: LayoutProps) {
               <div className="flex justify-between items-center space-x-10 md:space-x-16">
                 <Link href={`/site/${router.query.id}`} passHref>
                   <a
-                    className={`border-b-2 ${
-                      !tab ? "border-black" : "border-transparent"
-                    } py-3`}
+                    className={`border-b-2 ${!tab ? "border-black" : "border-transparent"
+                      } py-3`}
                   >
                     Posts
                   </a>
                 </Link>
                 <Link href={`/site/${router.query.id}/drafts`} passHref>
                   <a
-                    className={`border-b-2 ${
-                      tab == "drafts" ? "border-black" : "border-transparent"
-                    } py-3`}
+                    className={`border-b-2 ${tab == "drafts" ? "border-black" : "border-transparent"
+                      } py-3`}
                   >
                     Drafts
                   </a>
                 </Link>
                 <Link href={`/site/${router.query.id}/settings`} passHref>
                   <a
-                    className={`border-b-2 ${
-                      tab == "settings" ? "border-black" : "border-transparent"
-                    } py-3`}
+                    className={`border-b-2 ${tab == "settings" ? "border-black" : "border-transparent"
+                      } py-3`}
                   >
                     Settings
                   </a>
@@ -186,18 +180,16 @@ export default function Layout({ siteId, children }: LayoutProps) {
               <div className="flex justify-between items-center space-x-10 md:space-x-16">
                 <Link href={`/post/${router.query.id}`} passHref>
                   <a
-                    className={`border-b-2 ${
-                      !tab ? "border-black" : "border-transparent"
-                    } py-3`}
+                    className={`border-b-2 ${!tab ? "border-black" : "border-transparent"
+                      } py-3`}
                   >
                     Editor
                   </a>
                 </Link>
                 <Link href={`/post/${router.query.id}/settings`} passHref>
                   <a
-                    className={`border-b-2 ${
-                      tab == "settings" ? "border-black" : "border-transparent"
-                    } py-3`}
+                    className={`border-b-2 ${tab == "settings" ? "border-black" : "border-transparent"
+                      } py-3`}
                   >
                     Settings
                   </a>

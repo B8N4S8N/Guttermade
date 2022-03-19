@@ -1,5 +1,5 @@
-import PlausibleProvider from "next-plausible";
-import { SessionProvider } from "next-auth/react";
+import { Provider } from "wagmi";
+import { connectors } from "lib/connectors";
 
 import "@/styles/globals.css";
 
@@ -10,10 +10,8 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppProps) {
   return (
-    <PlausibleProvider domain="demo.punk3.xyz">
-      <SessionProvider session={session}>
-        <Component {...pageProps} />
-      </SessionProvider>
-    </PlausibleProvider>
+    <Provider autoConnect connectors={connectors}>
+      <Component {...pageProps} />
+    </Provider>
   );
 }

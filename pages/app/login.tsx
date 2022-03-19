@@ -1,26 +1,100 @@
-import { signIn } from "next-auth/react";
 import Head from "next/head";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import LoadingDots from "@/components/app/loading-dots";
 import toast, { Toaster } from "react-hot-toast";
+import { useConnect, useAccount, useNetwork, useSignMessage } from "wagmi";
+import { SiweMessage } from "siwe";
+import { shortAddress } from "@/lib/util";
 
 const pageTitle = "Login";
 const logo = "/favicon.ico";
 const description =
-  "Platforms Starter Kit is a comprehensive template for building multi-tenant applications with custom domains.";
-
+  "punk3.xyz is a web3 blogging platform for crypto punks.";
 export default function Login() {
+  const [{ data, error }, connect] = useConnect();
+  const [{ data: accountData }, disconnect] = useAccount({ fetchEns: true });
   const [loading, setLoading] = useState(false);
+  const [{ data: networkData }] = useNetwork();
+  const [state, setState] = useState<{
+    address?: string
+    error?: Error
+    loading?: boolean
+  }>({})
+  const [, signMessage] = useSignMessage();
 
-  // Get error message added by next/auth in URL.
-  const { query } = useRouter();
-  const { error } = query;
+  const signIn = useCallback(async () => {
+    try {
+      const address = accountData?.address;
+      const chainId = networkData?.chain?.id;
+      if (!address || !chainId) return;
+
+      setState((x) => ({ ...x, error: undefined, loading: true }));
+      // Fetch random nonce, create SIWE message, and sign with wallet
+      const nonceRes = await fetch("/api/nonce");
+      const message = new SiweMessage({
+        domain: window.location.host,
+        address,
+        statement: "Sign in with Ethereum to the app.",
+        uri: window.location.origin,
+        version: "1",
+        chainId,
+        nonce: await nonceRes.text(),
+      });
+      const signRes = await signMessage({ message: message.prepareMessage() });
+      if (signRes.error) throw signRes.error;
+      console.log("signRes success");
+
+      // signin(verify and create user)
+      const signinRes = await fetch("/api/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message, signature: signRes.data }),
+      });
+      if (!signinRes.ok) throw new Error("Error signin");
+      console.log("signin success");
+
+      setState((x) => ({ ...x, address, loading: false }));
+    } catch (error) {
+      console.log("signin error", error);
+      setState((x) => ({ ...x, loading: false }));
+    }
+  }, []);
+
+  // Fetch user when:
+  useEffect(() => {
+    const handler = async () => {
+      try {
+        const res = await fetch("/api/me");
+        const json = await res.json();
+        setState((x) => ({ ...x, address: json.address }));
+      } finally {
+        setState((x) => ({ ...x, loading: false }));
+      }
+    };
+    // 1. page loads
+    (async () => await handler())();
+
+    // 2. window is focused (in case user logs out of another window)
+    window.addEventListener("focus", handler);
+    return () => window.removeEventListener("focus", handler);
+  }, []);
+
+  // const router = useRouter();
+  // Wher user has signed in, redirect to app
+  // const { user } = useUser();
+  // if (user && user.isLoggedIn) {
+  //   router.push(appServer);
+  // }
 
   useEffect(() => {
-    const errorMessage = Array.isArray(error) ? error.pop() : error;
-    errorMessage && toast.error(errorMessage);
-  }, [error]);
+    const errorMessage = error?.message;
+    errorMessage && toast.error(errorMessage) && setLoading(false);
+    accountData && setLoading(false);
+  }, [error, accountData]);
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -43,26 +117,26 @@ export default function Login() {
         <meta property="og:image" content={logo} />
         <meta property="og:type" content="website" />
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@Elegance" />
-        <meta name="twitter:creator" content="@StevenTey" />
+        {/* <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@punk3" />
+        <meta name="twitter:creator" content="@punk3" />
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={logo} />
+        <meta name="twitter:image" content={logo} /> */}
       </Head>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <img
           className="mx-auto h-12 w-auto"
           src="/logo.png"
-          alt="Platforms Starter Kit"
+          alt="PUNK3"
         />
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Platforms Starter Kit
+          PUNK3
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Build multi-tenant applications with custom domains. <br /> Read the{" "}
+          Build web3 profile with custom domains. <br /> Read the{" "}
           <a
-            href="https://demo.punk3.xyz/platforms-starter-kit"
+            // href="https://demo.punk3.xyz/platforms-starter-kit"
             target="_blank"
             className="font-medium text-black hover:text-gray-800"
           >
@@ -73,31 +147,77 @@ export default function Login() {
 
       <div className="mt-8 mx-auto sm:w-full w-11/12 sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow-md sm:rounded-lg sm:px-10">
-          <button
-            disabled={loading}
-            onClick={() => {
-              setLoading(true);
-              signIn("github");
-            }}
-            className={`${loading ? "cursor-not-allowed bg-gray-600" : "bg-black"
+          {loading ? (
+            <div className={`${loading ? "cursor-not-allowed bg-gray-600" : "bg-black"
               } group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none`}
-          >
-            {loading ? (
+            >
               <LoadingDots color="#fff" />
-            ) : (
-              <svg
-                className="w-8 h-8 group-hover:animate-wiggle"
-                aria-hidden="true"
-                fill="white"
-                viewBox="0 0 24 24"
+            </div>
+          ) :
+            accountData ?
+              <div className={`${loading ? "cursor-not-allowed bg-gray-600" : "bg-black"
+                } group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none`}
               >
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-              </svg>
-            )}
-          </button>
+                <span className="text-base text-gray-200">
+                  {shortAddress(accountData.address)}
+                </span>
+                <button
+                  className="text-base text-gray-200 underline"
+                  onClick={disconnect}
+                >
+                  Disconnect
+                </button>
+
+              </div>
+              :
+              data.connectors.map((connector) => (
+                <button
+                  key={connector.id}
+                  disabled={loading}
+                  onClick={() => {
+                    setLoading(true);
+                    connect(connector);
+                  }}
+                  className={`${loading ? "cursor-not-allowed bg-gray-600" : "bg-black"
+                    } group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none`}
+                >
+                  <span className="text-base text-gray-200">
+                    {connector.name}
+                    {!connector.ready && " (unsupported)"}
+                  </span>
+                </button>
+              ))
+          }
+
+          {accountData && (
+            <div className="bg-blue-600 rounded-md">
+              {state.address ? (
+                <div>
+                  {/* <div>Signed in as {state.address}</div> */}
+                  <button
+                    className="group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none bg-black text-white"
+                    onClick={async () => {
+                      await fetch("/api/logout");
+                      setState({});
+                    }}
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <button
+                  className="group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none btn btn-primary text-white"
+                  disabled={state.loading}
+                  onClick={signIn}
+                >
+                  Sign-In with Ethereum
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
       <Toaster />
-    </div>
+    </div >
   );
 }

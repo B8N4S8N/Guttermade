@@ -8,6 +8,9 @@ A web3 blogging platform for the crypto punks.
 # Install dependencies
 yarn
 
+# Create database
+npx prisma db push
+
 # Run Dev
 yarn dev
 ```
