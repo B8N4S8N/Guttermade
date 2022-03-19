@@ -62,7 +62,7 @@ export default function Login() {
         <p className="mt-2 text-center text-sm text-gray-600">
           Build multi-tenant applications with custom domains. <br /> Read the{" "}
           <a
-            href="https://demo.vercel.pub/platforms-starter-kit"
+            href="https://demo.punk3.xyz/platforms-starter-kit"
             target="_blank"
             className="font-medium text-black hover:text-gray-800"
           >
@@ -79,9 +79,8 @@ export default function Login() {
               setLoading(true);
               signIn("github");
             }}
-            className={`${
-              loading ? "cursor-not-allowed bg-gray-600" : "bg-black"
-            } group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none`}
+            className={`${loading ? "cursor-not-allowed bg-gray-600" : "bg-black"
+              } group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none`}
           >
             {loading ? (
               <LoadingDots color="#fff" />

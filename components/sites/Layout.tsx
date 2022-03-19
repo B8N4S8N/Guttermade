@@ -67,9 +67,8 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
         {subdomain != "demo" && <meta name="robots" content="noindex" />}
       </Head>
       <div
-        className={`fixed w-full ${
-          scrolled ? "drop-shadow-md" : ""
-        }  top-0 left-0 right-0 h-16 bg-white z-30 transition-all ease duration-150 flex`}
+        className={`fixed w-full ${scrolled ? "drop-shadow-md" : ""
+          }  top-0 left-0 right-0 h-16 bg-white z-30 transition-all ease duration-150 flex`}
       >
         <div className="flex justify-center items-center space-x-5 h-full max-w-screen-xl mx-auto px-10 sm:px-20">
           <Link href="/" passHref>
@@ -96,16 +95,14 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
 
       {subdomain == "demo" && (
         <div
-          className={`${
-            closeModal ? "h-14 lg:h-auto" : "lg:h-auto sm:h-40 h-60"
-          } max-w-screen-xl xl:mx-auto mx-5 rounded-lg px-5 lg:pt-3 pt-0 pb-3 flex flex-col lg:flex-row space-y-3 lg:space-y-0 justify-between items-center sticky bottom-5 bg-white border-t-4 border-black
+          className={`${closeModal ? "h-14 lg:h-auto" : "lg:h-auto sm:h-40 h-60"
+            } max-w-screen-xl xl:mx-auto mx-5 rounded-lg px-5 lg:pt-3 pt-0 pb-3 flex flex-col lg:flex-row space-y-3 lg:space-y-0 justify-between items-center sticky bottom-5 bg-white border-t-4 border-black
           drop-shadow-lg transition-all ease-in-out duration-150`}
         >
           <button
             onClick={() => setCloseModal(!closeModal)}
-            className={`${
-              closeModal ? "rotate-180" : "rotate-0"
-            } lg:hidden absolute top-2 right-3 text-black transition-all ease-in-out duration-150`}
+            className={`${closeModal ? "rotate-180" : "rotate-0"
+              } lg:hidden absolute top-2 right-3 text-black transition-all ease-in-out duration-150`}
           >
             <svg
               viewBox="0 0 24 24"
@@ -126,9 +123,8 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
               Platforms Starter Kit Demo
             </p>
             <p
-              className={`${
-                closeModal ? "lg:block hidden" : ""
-              } text-sm text-gray-700 mt-2 lg:mt-0`}
+              className={`${closeModal ? "lg:block hidden" : ""
+                } text-sm text-gray-700 mt-2 lg:mt-0`}
             >
               This is a demo site showcasing how to build a multi-tenant
               application with{" "}
@@ -143,12 +139,11 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
             </p>
           </div>
           <div
-            className={`${
-              closeModal ? "lg:flex hidden" : ""
-            } flex space-y-3 sm:space-y-0 sm:space-x-3 sm:flex-row flex-col lg:w-auto w-full text-center`}
+            className={`${closeModal ? "lg:flex hidden" : ""
+              } flex space-y-3 sm:space-y-0 sm:space-x-3 sm:flex-row flex-col lg:w-auto w-full text-center`}
           >
             <a
-              href="https://app.vercel.pub"
+              href="https://app.punk3.xyz"
               target="_blank"
               className="flex-auto font-cal text-lg rounded-md py-1 sm:py-3 px-5 text-black border border-gray-200 hover:border-black transition-all ease-in-out duration-150 whitespace-no-wrap"
             >

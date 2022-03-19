@@ -59,7 +59,7 @@ export default function Post({
     description: data.description,
     logo: "/logo.png",
     ogImage: data.image,
-    ogUrl: `https://${data.site?.subdomain}.vercel.pub/${data.slug}`,
+    ogUrl: `https://${data.site?.subdomain}.punk3.xyz/${data.slug}`,
     title: data.title,
   } as Meta;
 
@@ -286,7 +286,7 @@ async function getMdxSource(postContents: string) {
     .use(remarkMdx)
     // Replaces tweets with static <Tweet /> component
     .use(replaceTweets)
-    // Replaces examples with <Example /> component (only for demo.vercel.pub)
+    // Replaces examples with <Example /> component (only for demo.punk3.xyz)
     .use(() => replaceExamples(prisma))
     .process(postContents);
 

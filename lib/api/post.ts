@@ -70,16 +70,16 @@ export async function getPost(
     const posts = !site
       ? []
       : await prisma.post.findMany({
-          where: {
-            site: {
-              id: siteId,
-            },
-            published: JSON.parse(published),
+        where: {
+          site: {
+            id: siteId,
           },
-          orderBy: {
-            createdAt: "desc",
-          },
-        });
+          published: JSON.parse(published),
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
 
     return res.status(200).json({
       posts,
@@ -170,7 +170,7 @@ export async function deletePost(
     });
     if (response) {
       await revalidate(
-        `https://${response.site?.subdomain}.vercel.pub`,
+        `https://${response.site?.subdomain}.punk3.xyz`,
         response.slug
       ); // revalidate for subdomain
     }
@@ -233,7 +233,7 @@ export async function updatePost(
         published,
       },
     });
-    if (subdomain) await revalidate(`https://${subdomain}.vercel.pub`, slug); // revalidate for subdomain
+    if (subdomain) await revalidate(`https://${subdomain}.punk3.xyz`, slug); // revalidate for subdomain
     if (customDomain) await revalidate(`https://${customDomain}`, slug); // revalidate for custom domain
 
     return res.status(200).json(post);

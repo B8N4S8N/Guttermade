@@ -127,7 +127,7 @@ export default function PostSettings() {
               <h2 className="font-cal text-2xl">Post Slug</h2>
               <div className="border border-gray-700 rounded-lg flex items-center max-w-lg">
                 <span className="px-5 font-cal rounded-l-lg border-r border-gray-600 whitespace-nowrap">
-                  {settings?.site?.subdomain}.vercel.pub/
+                  {settings?.site?.subdomain}.punk3.xyz/
                 </span>
                 <input
                   className="w-full px-5 py-3 font-cal text-gray-700 bg-white border-none focus:outline-none focus:ring-0 rounded-none rounded-r-lg placeholder-gray-400"
@@ -144,9 +144,8 @@ export default function PostSettings() {
             <div className="space-y-6">
               <h2 className="font-cal text-2xl">Thumbnail Image</h2>
               <div
-                className={`${
-                  data.image ? "" : "animate-pulse bg-gray-300 h-150"
-                } relative mt-5 w-full border-2 border-gray-800 border-dashed rounded-md`}
+                className={`${data.image ? "" : "animate-pulse bg-gray-300 h-150"
+                  } relative mt-5 w-full border-2 border-gray-800 border-dashed rounded-md`}
               >
                 <CloudinaryUploadWidget
                   callback={(e) => saveImage(e, data, setData)}
@@ -231,11 +230,10 @@ export default function PostSettings() {
               <button
                 type="submit"
                 disabled={deletingPost}
-                className={`${
-                  deletingPost
+                className={`${deletingPost
                     ? "cursor-not-allowed text-gray-400 bg-gray-50"
                     : "bg-white text-gray-600 hover:text-black"
-                } w-full px-5 py-5 text-sm border-t border-l border-gray-300 rounded-br focus:outline-none focus:ring-0 transition-all ease-in-out duration-150`}
+                  } w-full px-5 py-5 text-sm border-t border-l border-gray-300 rounded-br focus:outline-none focus:ring-0 transition-all ease-in-out duration-150`}
               >
                 {deletingPost ? <LoadingDots /> : "DELETE POST"}
               </button>
@@ -249,11 +247,10 @@ export default function PostSettings() {
                 savePostSettings(data);
               }}
               disabled={saving}
-              className={`${
-                saving
+              className={`${saving
                   ? "cursor-not-allowed bg-gray-300 border-gray-300"
                   : "bg-black hover:bg-white hover:text-black border-black"
-              } mx-2 w-36 h-12 text-lg text-white border-2 focus:outline-none transition-all ease-in-out duration-150`}
+                } mx-2 w-36 h-12 text-lg text-white border-2 focus:outline-none transition-all ease-in-out duration-150`}
             >
               {saving ? <LoadingDots /> : "Save Changes"}
             </button>

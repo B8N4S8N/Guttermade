@@ -61,11 +61,10 @@ export default function SiteDrafts() {
               setCreatingPost(true);
               createPost(siteId as string);
             }}
-            className={`${
-              creatingPost
+            className={`${creatingPost
                 ? "cursor-not-allowed bg-gray-300 border-gray-300"
                 : "text-white bg-black hover:bg-white hover:text-black border-black"
-            } font-cal text-lg w-3/4 sm:w-40 tracking-wide border-2 px-5 py-3 transition-all ease-in-out duration-150`}
+              } font-cal text-lg w-3/4 sm:w-40 tracking-wide border-2 px-5 py-3 transition-all ease-in-out duration-150`}
           >
             {creatingPost ? (
               <LoadingDots />
@@ -106,11 +105,11 @@ export default function SiteDrafts() {
                             "No description provided. Click to edit."}
                         </p>
                         <a
-                          href={`https://${data.site?.subdomain}.vercel.pub/${post.slug}`}
+                          href={`https://${data.site?.subdomain}.punk3.xyz/${post.slug}`}
                           target="_blank"
                           className="font-cal px-3 py-1 tracking-wide rounded bg-gray-200 text-gray-600 absolute bottom-5 left-10 whitespace-nowrap"
                         >
-                          {data.site?.subdomain}.vercel.pub/{post.slug} ↗
+                          {data.site?.subdomain}.punk3.xyz/{post.slug} ↗
                         </a>
                       </div>
                     </div>

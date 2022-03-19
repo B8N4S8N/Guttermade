@@ -35,7 +35,7 @@ export default function AppIndex() {
         if (available) {
           setError(null);
         } else {
-          setError(`${debouncedSubdomain}.vercel.pub`);
+          setError(`${debouncedSubdomain}.punk3.xyz`);
         }
       }
     }
@@ -105,7 +105,7 @@ export default function AppIndex() {
                 type="text"
               />
               <span className="px-5 bg-gray-100 h-full flex items-center rounded-r-lg border-l border-gray-600">
-                .vercel.pub
+                .punk3.xyz
               </span>
             </div>
             {error && (
@@ -141,11 +141,10 @@ export default function AppIndex() {
             <button
               type="submit"
               disabled={creatingSite || error !== null}
-              className={`${
-                creatingSite || error
+              className={`${creatingSite || error
                   ? "cursor-not-allowed text-gray-400 bg-gray-50"
                   : "bg-white text-gray-600 hover:text-black"
-              } w-full px-5 py-5 text-sm border-t border-l border-gray-300 rounded-br focus:outline-none focus:ring-0 transition-all ease-in-out duration-150`}
+                } w-full px-5 py-5 text-sm border-t border-l border-gray-300 rounded-br focus:outline-none focus:ring-0 transition-all ease-in-out duration-150`}
             >
               {creatingSite ? <LoadingDots /> : "CREATE SITE"}
             </button>
@@ -191,11 +190,11 @@ export default function AppIndex() {
                         </p>
                         <a
                           onClick={(e) => e.stopPropagation()}
-                          href={`https://${site.subdomain}.vercel.pub`}
+                          href={`https://${site.subdomain}.punk3.xyz`}
                           target="_blank"
                           className="font-cal px-3 py-1 tracking-wide rounded bg-gray-200 text-gray-600 absolute bottom-5 left-10 whitespace-nowrap"
                         >
-                          {site.subdomain}.vercel.pub ↗
+                          {site.subdomain}.punk3.xyz ↗
                         </a>
                       </div>
                     </div>
