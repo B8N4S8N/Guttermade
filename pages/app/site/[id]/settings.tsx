@@ -285,8 +285,8 @@ export default function SiteSettings() {
                   type="submit"
                   disabled={disabled}
                   className={`${disabled
-                      ? "cursor-not-allowed bg-gray-100 text-gray-500 border-gray-300"
-                      : "bg-black text-white border-black hover:text-black hover:bg-white"
+                    ? "cursor-not-allowed bg-gray-100 text-gray-500 border-gray-300"
+                    : "bg-black text-white border-black hover:text-black hover:bg-white"
                     } px-5 py-3 w-28 font-cal border-solid border rounded-md focus:outline-none transition-all ease-in-out duration-150`}
                 >
                   {adding ? <LoadingDots /> : "Add"}
@@ -428,7 +428,7 @@ export default function SiteSettings() {
                 type="text"
                 name="name"
                 placeholder={data.name ?? ""}
-                pattern={data.name ?? "Site Name"}
+                pattern={data.name ?? "Profile Name"}
               />
             </div>
           </div>
@@ -445,8 +445,8 @@ export default function SiteSettings() {
               type="submit"
               disabled={deletingSite}
               className={`${deletingSite
-                  ? "cursor-not-allowed text-gray-400 bg-gray-50"
-                  : "bg-white text-gray-600 hover:text-black"
+                ? "cursor-not-allowed text-gray-400 bg-gray-50"
+                : "bg-white text-gray-600 hover:text-black"
                 } w-full px-5 py-5 text-sm border-t border-l border-gray-300 rounded-br focus:outline-none focus:ring-0 transition-all ease-in-out duration-150`}
             >
               {deletingSite ? <LoadingDots /> : "DELETE SITE"}
@@ -463,8 +463,8 @@ export default function SiteSettings() {
             }}
             disabled={saving || subdomainError !== null}
             className={`${saving || subdomainError
-                ? "cursor-not-allowed bg-gray-300 border-gray-300"
-                : "bg-black hover:bg-white hover:text-black border-black"
+              ? "cursor-not-allowed bg-gray-300 border-gray-300"
+              : "bg-black hover:bg-white hover:text-black border-black"
               } mx-2 rounded-md w-36 h-12 text-lg text-white border-2 focus:outline-none transition-all ease-in-out duration-150`}
           >
             {saving ? <LoadingDots /> : "Save Changes"}

@@ -93,7 +93,7 @@ export default function Layout({ siteId, children }: LayoutProps) {
               target="_blank"
               className="font-cal flex items-center space-x-2 text-gray-700 px-5 py-3 sm:hover:text-black sm:hover:bg-white transition-all ease-in-out duration-150"
             >
-              <p className="hidden sm:block">Contribution</p>
+              {/* <p className="hidden sm:block">Contribute</p> */}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -113,7 +113,7 @@ export default function Layout({ siteId, children }: LayoutProps) {
                 className={`border-b-2 ${tab == "" ? "border-black" : "border-transparent"
                   } py-3`}
               >
-                My Sites
+                My Profiles
               </a>
             </Link>
             <Link href="/settings" passHref>

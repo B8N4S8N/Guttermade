@@ -1,3 +1,3 @@
-import type { User as NextAuthUser } from "next-auth";
+import type { User } from "./user";
 
-export type UserSettings = Pick<NextAuthUser, "name" | "email" | "image">;
+export type UserSettings = Pick<User, "name" | "email" | "image">;

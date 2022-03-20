@@ -2,7 +2,7 @@ import { createSite, deleteSite, getSite, updateSite } from "@/lib/api";
 import { HttpMethod } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { server } from "../../config";
-import { User } from "pages/api/user";
+import { User } from "types/user";
 
 export default async function site(req: NextApiRequest, res: NextApiResponse) {
   const user: User = await (await fetch(`${server}/api/user`)).json();

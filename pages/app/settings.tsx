@@ -7,13 +7,11 @@ import saveImage from "@/lib/save-image";
 import { HttpMethod } from "@/types";
 
 import { useState, useEffect, useRef } from "react";
-import { useSession } from "next-auth/react";
-
+import useUser from "@/lib/useUser";
 import type { UserSettings } from "@/types";
 
 export default function AppSettings() {
-  const { data: session } = useSession();
-
+  const { user } = useUser();
   const [saving, setSaving] = useState<boolean>(false);
   const [data, setData] = useState<UserSettings | null>(null);
 
@@ -21,11 +19,11 @@ export default function AppSettings() {
   const emailRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (session)
+    if (user)
       setData({
-        ...session.user,
+        ...user,
       });
-  }, [session]);
+  }, [user]);
 
   async function saveSettings(data: UserSettings | null) {
     setSaving(true);
@@ -92,9 +90,8 @@ export default function AppSettings() {
             <div className="space-y-6">
               <h2 className="font-cal text-2xl">Display Picture</h2>
               <div
-                className={`${
-                  data?.image ? "" : "animate-pulse bg-gray-300 h-150"
-                } relative mt-5 w-48 border-2 border-gray-800 border-dashed rounded-md`}
+                className={`${data?.image ? "" : "animate-pulse bg-gray-300 h-150"
+                  } relative mt-5 w-48 border-2 border-gray-800 border-dashed rounded-md`}
               >
                 <CloudinaryUploadWidget
                   callback={(e) => saveImage(e, data, setData)}
@@ -139,11 +136,10 @@ export default function AppSettings() {
                 saveSettings(data);
               }}
               disabled={saving}
-              className={`${
-                saving
-                  ? "cursor-not-allowed bg-gray-300 border-gray-300"
-                  : "bg-black hover:bg-white hover:text-black border-black"
-              } mx-2 w-36 h-12 text-lg text-white border-2 focus:outline-none transition-all ease-in-out duration-150`}
+              className={`${saving
+                ? "cursor-not-allowed bg-gray-300 border-gray-300"
+                : "bg-black hover:bg-white hover:text-black border-black"
+                } mx-2 w-36 h-12 text-lg text-white border-2 focus:outline-none transition-all ease-in-out duration-150`}
             >
               {saving ? <LoadingDots /> : "Save Changes"}
             </button>

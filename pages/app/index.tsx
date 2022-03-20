@@ -82,14 +82,14 @@ export default function AppIndex() {
           }}
           className="inline-block w-full max-w-md pt-8 overflow-hidden text-center align-middle transition-all bg-white shadow-xl rounded-lg"
         >
-          <h2 className="font-cal text-2xl mb-6">Create a New Site</h2>
+          <h2 className="font-cal text-2xl mb-6">Create a New Profile</h2>
           <div className="grid gap-y-5 w-5/6 mx-auto">
             <div className="border border-gray-700 rounded-lg flex flex-start items-center">
               <span className="pl-5 pr-1">📌</span>
               <input
                 className="w-full px-5 py-3 text-gray-700 bg-white border-none focus:outline-none focus:ring-0 rounded-none rounded-r-lg placeholder-gray-400"
                 name="name"
-                placeholder="Site Name"
+                placeholder="Profile Name"
                 ref={siteNameRef}
                 type="text"
               />
@@ -146,7 +146,7 @@ export default function AppIndex() {
                 : "bg-white text-gray-600 hover:text-black"
                 } w-full px-5 py-5 text-sm border-t border-l border-gray-300 rounded-br focus:outline-none focus:ring-0 transition-all ease-in-out duration-150`}
             >
-              {creatingSite ? <LoadingDots /> : "CREATE SITE"}
+              {creatingSite ? <LoadingDots /> : "CREATE PROFILE"}
             </button>
           </div>
         </form>
@@ -154,12 +154,12 @@ export default function AppIndex() {
 
       <div className="py-20 max-w-screen-xl mx-auto px-10 sm:px-20">
         <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 justify-between items-center">
-          <h1 className="font-cal text-5xl">My Sites</h1>
+          <h1 className="font-cal text-5xl">My Profiles</h1>
           <button
             onClick={() => setShowModal(true)}
-            className="font-cal text-lg w-3/4 sm:w-40 tracking-wide text-white bg-black border-black border-2 px-5 py-3 hover:bg-white hover:text-black transition-all ease-in-out duration-150"
+            className="font-cal text-lg w-3/4 sm:w-44 tracking-wide text-white bg-black border-black border-2 px-5 py-3 hover:bg-white hover:text-black transition-all ease-in-out duration-150"
           >
-            New Site <span className="ml-2">＋</span>
+            New Profile <span className="ml-2">＋</span>
           </button>
         </div>
         <div className="my-10 grid gap-y-10">
@@ -214,7 +214,7 @@ export default function AppIndex() {
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-cal text-gray-600">
-                    No sites yet. Click "New Site" to create one.
+                    No profiles yet. Click "New Profile" to create one.
                   </p>
                 </div>
               </>
