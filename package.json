@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.4.3",
+    "@heroicons/react": "^1.0.6",
     "@prisma/client": "^3.8.1",
     "blurhash": "^1.1.4",
     "clsx": "^1.1.1",
