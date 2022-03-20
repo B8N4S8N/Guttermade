@@ -1,14 +1,13 @@
-import withSession from '@/lib/session'
-import { NextApiRequest, NextApiResponse } from 'next'
+import withSession from "@/lib/session";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export type User = {
-  id: string
-  address: string
-  isLoggedIn: boolean
-}
+  id: string;
+  address: string;
+  isLoggedIn: boolean;
+};
 
 async function userRoute(req: NextApiRequest, res: NextApiResponse<User>) {
-  console.log('req', req)
   if (req.session.siwe) {
     // in a real world application you might read the user id from the session and then do a database request
     // to get more information on the user if needed
@@ -17,14 +16,14 @@ async function userRoute(req: NextApiRequest, res: NextApiResponse<User>) {
       address: req.session.siwe.address,
       // ...req.session.siwe,
       isLoggedIn: true,
-    })
+    });
   } else {
     res.json({
-      id: '',
-      address: '',
+      id: "",
+      address: "",
       isLoggedIn: false,
-    })
+    });
   }
 }
 
-export default withSession(userRoute)
+export default withSession(userRoute);

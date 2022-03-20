@@ -1,18 +1,19 @@
 import { createSite, deleteSite, getSite, updateSite } from "@/lib/api";
-import { getServerSession } from "next-auth/next";
-
-import { authOptions } from "./auth/[...nextauth]";
 import { HttpMethod } from "@/types";
-
 import type { NextApiRequest, NextApiResponse } from "next";
+import { server } from "../../config";
+import { User } from "pages/api/user";
 
 export default async function site(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession({ req, res }, authOptions);
-  if (!session) return res.status(401).end();
+  const user: User = await (await fetch(`${server}/api/user`)).json();
+  if (!user) {
+    res.status(401).end();
+    return;
+  }
 
   switch (req.method) {
     case HttpMethod.GET:
-      return getSite(req, res, session);
+      return getSite(req, res, user);
     case HttpMethod.POST:
       return createSite(req, res);
     case HttpMethod.DELETE:

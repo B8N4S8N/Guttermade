@@ -6,6 +6,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { useConnect, useAccount, useNetwork, useSignMessage } from "wagmi";
 import { SiweMessage } from "siwe";
 import { shortAddress } from "@/lib/util";
+import useUser from "@/lib/useUser";
+import { appServer } from "config";
 
 const pageTitle = "Login";
 const logo = "/favicon.ico";
@@ -13,7 +15,7 @@ const description =
   "punk3.xyz is a web3 blogging platform for crypto punks.";
 export default function Login() {
   const [{ data, error }, connect] = useConnect();
-  const [{ data: accountData }, disconnect] = useAccount({ fetchEns: true });
+  const [{ data: accountData, error: aerr, loading: aloading }, disconnect] = useAccount({ fetchEns: true });
   const [loading, setLoading] = useState(false);
   const [{ data: networkData }] = useNetwork();
   const [state, setState] = useState<{
@@ -61,7 +63,7 @@ export default function Login() {
       console.log("signin error", error);
       setState((x) => ({ ...x, loading: false }));
     }
-  }, []);
+  }, [[accountData, networkData]]);
 
   // Fetch user when:
   useEffect(() => {
@@ -82,12 +84,8 @@ export default function Login() {
     return () => window.removeEventListener("focus", handler);
   }, []);
 
-  // const router = useRouter();
   // Wher user has signed in, redirect to app
-  // const { user } = useUser();
-  // if (user && user.isLoggedIn) {
-  //   router.push(appServer);
-  // }
+  const { user } = useUser({ redirectTo: appServer, redirectIfFound: true });
 
   useEffect(() => {
     const errorMessage = error?.message;

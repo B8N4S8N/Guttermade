@@ -1,8 +1,9 @@
 import { SiweMessage } from 'siwe'
 import withSession from 'lib/session'
 import prisma from '@/lib/prisma'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-const handler = async (req, res) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req
   switch (method) {
     case 'POST':

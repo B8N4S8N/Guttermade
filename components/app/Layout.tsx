@@ -1,10 +1,10 @@
 import Head from "next/head";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React from "react";
 import Loader from "./Loader";
 import useUser from "@/lib/useUser";
+import { shortAddress } from "@/lib/util";
 
 import type { WithChildren } from "@/types";
 
@@ -62,7 +62,7 @@ export default function Layout({ siteId, children }: LayoutProps) {
             <div className="flex space-x-4">
               <Link href="/">
                 <a className="flex justify-center items-center">
-                  {session.user && session.user.image && (
+                  {/* {session.user && session.user.image && (
                     <div className="h-8 w-8 inline-block rounded-full overflow-hidden align-middle">
                       <Image
                         src={session.user.image}
@@ -71,16 +71,19 @@ export default function Layout({ siteId, children }: LayoutProps) {
                         alt={session.user.name ?? "User avatar"}
                       />
                     </div>
-                  )}
+                  )} */}
                   <span className="sm:block inline-block ml-3 font-medium truncate">
-                    {session.user?.name}
+                    {shortAddress(user?.address)}
                   </span>
                 </a>
               </Link>
               <div className="h-8 border border-gray-300" />
               <button
                 className="text-gray-500 hover:text-gray-700 transition-all ease-in-out duration-150"
-                onClick={() => signOut()}
+                onClick={async () => {
+                  await fetch("/api/logout");
+                  router.push("/login");
+                }}
               >
                 Logout
               </button>

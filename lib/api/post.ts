@@ -25,7 +25,7 @@ interface AllPosts {
 export async function getPost(
   req: NextApiRequest,
   res: NextApiResponse,
-  session: Session
+  session: Session,
 ): Promise<void | NextApiResponse<AllPosts | (WithSitePost | null)>> {
   const { postId, siteId, published } = req.query;
 
@@ -70,16 +70,16 @@ export async function getPost(
     const posts = !site
       ? []
       : await prisma.post.findMany({
-        where: {
-          site: {
-            id: siteId,
+          where: {
+            site: {
+              id: siteId,
+            },
+            published: JSON.parse(published),
           },
-          published: JSON.parse(published),
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
 
     return res.status(200).json({
       posts,
@@ -103,7 +103,7 @@ export async function getPost(
  */
 export async function createPost(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void | NextApiResponse<{
   postId: string;
 }>> {
@@ -148,7 +148,7 @@ export async function createPost(
  */
 export async function deletePost(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void | NextApiResponse> {
   const { postId } = req.query;
 
@@ -171,7 +171,7 @@ export async function deletePost(
     if (response) {
       await revalidate(
         `https://${response.site?.subdomain}.punk3.xyz`,
-        response.slug
+        response.slug,
       ); // revalidate for subdomain
     }
     if (response?.site?.customDomain)
@@ -203,7 +203,7 @@ export async function deletePost(
  */
 export async function updatePost(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void | NextApiResponse<Post>> {
   const {
     id,
