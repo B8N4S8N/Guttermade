@@ -1,14 +1,18 @@
 import { createSite, deleteSite, getSite, updateSite } from "@/lib/api";
 import { HttpMethod } from "@/types";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { server } from "../../config";
+import { appServer } from "config";
 import { User } from "types/user";
 
 export default async function site(req: NextApiRequest, res: NextApiResponse) {
-  const user: User = await (await fetch(`${server}/api/user`)).json();
-  if (!user) {
-    res.status(401).end();
-    return;
+  // TODO: handle sub.localhost
+  let user: User;
+  if (process.env.NODE_ENV === "production") {
+    user = await (await fetch(`${appServer}/api/user`)).json();
+    if (!user) {
+      res.status(401).end();
+      return;
+    }
   }
 
   switch (req.method) {

@@ -1,11 +1,6 @@
 import withSession from "@/lib/session";
 import { NextApiRequest, NextApiResponse } from "next";
-
-export type User = {
-  id: string;
-  address: string;
-  isLoggedIn: boolean;
-};
+import { User } from "types";
 
 async function userRoute(req: NextApiRequest, res: NextApiResponse<User>) {
   if (req.session.siwe) {
@@ -20,7 +15,7 @@ async function userRoute(req: NextApiRequest, res: NextApiResponse<User>) {
   } else {
     res.json({
       id: "",
-      address: "",
+      address: null,
       isLoggedIn: false,
     });
   }

@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import { useDebounce } from "use-debounce";
 import { fetcher } from "@/lib/fetcher";
-import { HttpMethod } from "@/types";
+import { HttpMethod } from "@/types"
 import useUser from "@/lib/useUser";
 
 import type { FormEvent } from "react";

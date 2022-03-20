@@ -28,7 +28,10 @@ export async function getSite(
       .status(400)
       .end("Bad request. siteId parameter cannot be an array.");
 
-  if (!user.id) return res.status(500).end("Server failed to get user ID");
+  // TODO: handle sub.localhost
+  if (process.env.NODE_ENV === "production") {
+    if (!user.id) return res.status(500).end("Server failed to get user ID");
+  }
 
   try {
     if (siteId) {
@@ -36,7 +39,7 @@ export async function getSite(
         where: {
           id: siteId,
           user: {
-            id: user.id,
+            id: user?.id,
           },
         },
       });
@@ -47,7 +50,7 @@ export async function getSite(
     const sites = await prisma.site.findMany({
       where: {
         user: {
-          id: user.id,
+          id: user?.id,
         },
       },
     });
