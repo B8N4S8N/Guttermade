@@ -26,7 +26,10 @@ export default function SiteIndex() {
     siteId && `/api/post?siteId=${siteId}&published=true`,
     fetcher,
     {
-      onSuccess: (data) => !data?.site && router.push("/"),
+      // TODO
+      // onSuccess: (data) => {
+      //   !data?.site && router.push("/")
+      // },
     }
   );
 
@@ -39,8 +42,10 @@ export default function SiteIndex() {
         },
       });
 
+      console.log("res", res);
       if (res.ok) {
         const data = await res.json();
+        console.log("data", data)
         router.push(`/post/${data.postId}`);
       }
     } catch (error) {
@@ -61,8 +66,8 @@ export default function SiteIndex() {
               createPost(siteId as string);
             }}
             className={`${creatingPost
-                ? "cursor-not-allowed bg-gray-300 border-gray-300"
-                : "text-white bg-black hover:bg-white hover:text-black border-black"
+              ? "cursor-not-allowed bg-gray-300 border-gray-300"
+              : "text-white bg-black hover:bg-white hover:text-black border-black"
               } font-cal text-lg w-3/4 sm:w-40 tracking-wide border-2 px-5 py-3 transition-all ease-in-out duration-150`}
           >
             {creatingPost ? (

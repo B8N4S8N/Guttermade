@@ -1,14 +1,18 @@
 import { createPost, deletePost, getPost, updatePost } from "@/lib/api";
 import { HttpMethod, User } from "@/types";
-import { server } from "config";
+import { appServer } from "config";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function post(req: NextApiRequest, res: NextApiResponse) {
-  const user: User = await (await fetch(`${server}/api/user`)).json();
-  if (!user) {
-    res.status(401).end();
-    return;
+  // TODO: handle sub.localhost
+  let user: User = { id: "", name: "", email: "", isLoggedIn: false };
+  if (process.env.NODE_ENV === "production") {
+    user = await (await fetch(`${appServer}/api/user`)).json();
+    if (!user) {
+      res.status(401).end();
+      return;
+    }
   }
   switch (req.method) {
     case HttpMethod.GET:

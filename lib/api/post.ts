@@ -2,10 +2,9 @@ import prisma from "@/lib/prisma";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Post, Site } from ".prisma/client";
-import type { Session } from "next-auth";
 import { revalidate } from "@/lib/revalidate";
 
-import type { WithSitePost } from "@/types";
+import type { WithSitePost, User } from "@/types";
 
 interface AllPosts {
   posts: Array<Post>;
@@ -25,7 +24,7 @@ interface AllPosts {
 export async function getPost(
   req: NextApiRequest,
   res: NextApiResponse,
-  session: Session,
+  user: User,
 ): Promise<void | NextApiResponse<AllPosts | (WithSitePost | null)>> {
   const { postId, siteId, published } = req.query;
 
@@ -36,19 +35,21 @@ export async function getPost(
   )
     return res.status(400).end("Bad request. Query parameters are not valid.");
 
-  if (!session.user.id)
-    return res.status(500).end("Server failed to get session user ID");
+  if (process.env.NODE_ENV === "production") {
+    if (!user.id)
+      return res.status(500).end("Server failed to get session user ID");
+  }
 
   try {
     if (postId) {
       const post = await prisma.post.findFirst({
         where: {
           id: postId,
-          site: {
-            user: {
-              id: session.user.id,
-            },
-          },
+          // site: {
+          //   user: {
+          //     id: user?.id,
+          //   },
+          // },
         },
         include: {
           site: true,
@@ -61,9 +62,9 @@ export async function getPost(
     const site = await prisma.site.findFirst({
       where: {
         id: siteId,
-        user: {
-          id: session.user.id,
-        },
+        // user: {
+        //   id: user?.id,
+        // },
       },
     });
 
