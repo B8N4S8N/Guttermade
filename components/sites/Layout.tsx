@@ -58,12 +58,12 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
         <meta property="og:image" content={meta?.ogImage} />
         <meta property="og:type" content="website" />
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@Vercel" />
-        <meta name="twitter:creator" content="@StevenTey" />
+        {/* <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@punk3" />
+        <meta name="twitter:creator" content="@punk3" />
         <meta name="twitter:title" content={meta?.title} />
         <meta name="twitter:description" content={meta?.description} />
-        <meta name="twitter:image" content={meta?.ogImage} />
+        <meta name="twitter:image" content={meta?.ogImage} /> */}
         {subdomain != "demo" && <meta name="robots" content="noindex" />}
       </Head>
       <div

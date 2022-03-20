@@ -13,9 +13,9 @@ interface LayoutProps extends WithChildren {
 }
 
 export default function Layout({ siteId, children }: LayoutProps) {
-  const title = "Platforms on Vercel";
+  const title = "Punk3";
   const description =
-    "Create a fullstack application with multi-tenancy and custom domains support using Next.js, Prisma, and PostgreSQL";
+    "A web3 blogging platform for the crypto punks";
   const logo = "/favicon.ico";
   const router = useRouter();
   const sitePage = router.pathname.startsWith("/app/site/[id]");
@@ -50,12 +50,12 @@ export default function Layout({ siteId, children }: LayoutProps) {
           <meta property="og:image" content={logo} />
           <meta property="og:type" content="website" />
 
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:site" content="@Vercel" />
-          <meta name="twitter:creator" content="@StevenTey" />
+          {/* <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:site" content="@punk3" />
+          <meta name="twitter:creator" content="@punk3" />
           <meta name="twitter:title" content={title} />
           <meta name="twitter:description" content={description} />
-          <meta name="twitter:image" content={logo} />
+          <meta name="twitter:image" content={logo} /> */}
         </Head>
         <div className="absolute left-0 right-0 h-16 border-b bg-white border-gray-200">
           <div className="flex justify-between items-center h-full max-w-screen-xl mx-auto px-10 sm:px-20">
@@ -89,11 +89,11 @@ export default function Layout({ siteId, children }: LayoutProps) {
               </button>
             </div>
             <a
-              href="https://github.com/vercel/platforms"
+              href="https://github.com/punk3lab/punk3"
               target="_blank"
               className="font-cal flex items-center space-x-2 text-gray-700 px-5 py-3 sm:hover:text-black sm:hover:bg-white transition-all ease-in-out duration-150"
             >
-              <p className="hidden sm:block">Build my own</p>
+              <p className="hidden sm:block">Contribution</p>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
