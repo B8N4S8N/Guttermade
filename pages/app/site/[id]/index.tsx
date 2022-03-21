@@ -5,11 +5,14 @@ import useSWR from "swr";
 
 import BlurImage from "@/components/BlurImage";
 import Layout from "@/components/app/Layout";
+import Modal from "@/components/Modal";
 import LoadingDots from "@/components/app/loading-dots";
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod } from "@/types";
+import { profiles } from "@/lib/profile";
 
 import type { Post, Site } from "@prisma/client";
+import { useEffect } from "react";
 
 interface SitePostData {
   posts: Array<Post>;
@@ -17,7 +20,9 @@ interface SitePostData {
 }
 
 export default function SiteIndex() {
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [creatingPost, setCreatingPost] = useState(false);
+  const [profile, setProfile] = useState(null);
 
   const router = useRouter();
   const { id: siteId } = router.query;
@@ -53,12 +58,94 @@ export default function SiteIndex() {
     }
   }
 
+  async function getProfile(handle: string) {
+    const p: any = await profiles(
+      { handles: [handle] },
+    );
+    if (p.profiles.items.length > 0) {
+      return p.profiles.items[0];
+    }
+
+  }
+
+  useEffect(() => {
+    async function fetchProfile() {
+      const handle = data?.site?.name;
+      if (handle) {
+        const profile = await getProfile(handle);
+        console.log("p", profile)
+        setProfile(profile)
+      }
+    }
+
+    fetchProfile();
+  }, [data?.site?.name]);
+
   return (
     <Layout>
+      <Modal showModal={showModal} setShowModal={setShowModal}>
+        <div
+          className="inline-block w-full max-w-md pt-8 overflow-hidden text-center align-middle transition-all bg-white shadow-xl rounded-lg"
+        >
+          <div
+            className="col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200"
+          >
+            <div className="flex-1 flex flex-col p-8">
+              <div className="flex flex-row mx-auto items-center justify-between space-x-10">
+                <div className="flex flex-col space-y-3">
+                  <span className="text-gray-900 text-2xl font-extrabold uppercase">{profile?.handle}</span>
+                  <a className="mt-1 text-md font-bold underline"
+                    href={`https://mumbai.polygonscan.com/token/0xd7b3481de00995046c7850bce9a5196b7605c367?a=${parseInt(profile?.id, 16)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Lens NFT #{parseInt(profile?.id, 16)}
+                  </a>
+                </div>
+                <img className="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://files.readme.io/a0959e6-lens-logo1.svg" alt="" />
+              </div>
+              <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Following</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalFollowing}</dd>
+                </div>
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Followers</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalFollowers}</dd>
+                </div>
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Posts</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalPosts}</dd>
+                </div>
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Collects</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalCollects}</dd>
+                </div>
+              </dl>
+
+            </div>
+            <div>
+              <div className="-mt-px flex divide-x divide-gray-200">
+                <div className="w-0 flex-1 flex">
+                  <button
+                    className="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <span className="ml-3">Close</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
       <div className="py-20 max-w-screen-xl mx-auto px-10 sm:px-20">
         <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 justify-between items-center">
           <h1 className="font-cal text-5xl">
-            Posts for {data ? data?.site?.name : "..."}
+            Posts for {""}
+            <button className="underline" onClick={() => setShowModal(true)} >{data ? data?.site?.name : "..."}</button>
           </h1>
           <button
             onClick={() => {
@@ -154,6 +241,6 @@ export default function SiteIndex() {
           )}
         </div>
       </div>
-    </Layout>
+    </Layout >
   );
 }

@@ -12,7 +12,6 @@ import { HttpMethod } from "@/types"
 import useUser from "@/lib/useUser";
 import { createProfile } from "@/lib/profile";
 
-import type { FormEvent } from "react";
 import type { Site } from "@prisma/client";
 
 export default function AppIndex() {
@@ -94,7 +93,7 @@ export default function AppIndex() {
           onSubmit={(event) => {
             event.preventDefault();
             setCreatingSite(true);
-            createSite(event);
+            createSite();
           }}
           className="inline-block w-full max-w-md pt-8 overflow-hidden text-center align-middle transition-all bg-white shadow-xl rounded-lg"
         >
