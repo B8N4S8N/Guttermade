@@ -5,7 +5,7 @@ import LoadingDots from "@/components/app/loading-dots";
 import toast, { Toaster } from "react-hot-toast";
 import { useConnect, useAccount, useNetwork, useSignMessage } from "wagmi";
 import { SiweMessage } from "siwe";
-import { shortAddress } from "@/lib/util";
+import { shortAddress } from "@/lib/helpers";
 import useUser from "@/lib/useUser";
 import { appServer } from "config";
 
