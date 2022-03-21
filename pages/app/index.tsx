@@ -10,6 +10,7 @@ import { useDebounce } from "use-debounce";
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod } from "@/types"
 import useUser from "@/lib/useUser";
+import { createProfile } from "@/lib/profile";
 
 import type { FormEvent } from "react";
 import type { Site } from "@prisma/client";
@@ -19,7 +20,9 @@ export default function AppIndex() {
   const [creatingSite, setCreatingSite] = useState<boolean>(false);
   const [subdomain, setSubdomain] = useState<string>("");
   const [debouncedSubdomain] = useDebounce(subdomain, 1500);
+  const [name, setName] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
 
   const siteNameRef = useRef<HTMLInputElement | null>(null);
   const siteSubdomainRef = useRef<HTMLInputElement | null>(null);
@@ -52,7 +55,20 @@ export default function AppIndex() {
     fetcher
   );
 
-  async function createSite(e: FormEvent<HTMLFormElement>) {
+  async function createSite() {
+    try {
+      const profile = await createProfile(siteNameRef.current?.value || "")
+      console.log("profile created", profile);
+    } catch (e: any) {
+      console.log("create profile error", e);
+      if (e.message === "HANDLE_TAKEN") {
+        setProfileError(name);
+        setCreatingSite(false);
+      }
+
+      return;
+    }
+
     const res = await fetch("/api/site", {
       method: HttpMethod.POST,
       headers: {
@@ -92,8 +108,15 @@ export default function AppIndex() {
                 placeholder="Profile Name"
                 ref={siteNameRef}
                 type="text"
+                onInput={() => setName(siteNameRef.current!.value)}
               />
             </div>
+            {profileError && (
+              <p className="px-5 text-left text-red-500">
+                Profile <b>{profileError}</b> has already been taken, please try
+                another one.
+              </p>
+            )}
             <div className="border border-gray-700 rounded-lg flex flex-start items-center">
               <span className="pl-5 pr-1">🪧</span>
               <input

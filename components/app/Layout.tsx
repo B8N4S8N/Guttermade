@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import Loader from "./Loader";
 import useUser from "@/lib/useUser";
-import { shortAddress } from "@/lib/util";
+import { shortAddress } from "@/lib/helpers";
 
 import type { WithChildren } from "@/types";
 
