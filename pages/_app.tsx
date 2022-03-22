@@ -1,4 +1,6 @@
 import { Provider } from "wagmi";
+import { SessionProvider } from "next-auth/react";
+
 import { connectors } from "lib/connectors";
 
 import "@/styles/globals.css";
@@ -11,7 +13,9 @@ export default function App({
 }: AppProps) {
   return (
     <Provider autoConnect connectors={connectors}>
-      <Component {...pageProps} />
+      <SessionProvider session={session}>
+        <Component {...pageProps} />
+      </SessionProvider>
     </Provider>
   );
 }
