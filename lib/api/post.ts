@@ -2,9 +2,10 @@ import prisma from "@/lib/prisma";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Post, Site } from ".prisma/client";
+import type { Session } from "next-auth";
 import { revalidate } from "@/lib/revalidate";
 
-import type { WithSitePost, User } from "@/types";
+import type { WithSitePost } from "@/types";
 
 interface AllPosts {
   posts: Array<Post>;
@@ -24,7 +25,7 @@ interface AllPosts {
 export async function getPost(
   req: NextApiRequest,
   res: NextApiResponse,
-  user: User,
+  session: Session
 ): Promise<void | NextApiResponse<AllPosts | (WithSitePost | null)>> {
   const { postId, siteId, published } = req.query;
 
@@ -35,21 +36,19 @@ export async function getPost(
   )
     return res.status(400).end("Bad request. Query parameters are not valid.");
 
-  if (process.env.NODE_ENV === "production") {
-    if (!user.id)
-      return res.status(500).end("Server failed to get session user ID");
-  }
+  if (!session.user.id)
+    return res.status(500).end("Server failed to get session user ID");
 
   try {
     if (postId) {
       const post = await prisma.post.findFirst({
         where: {
           id: postId,
-          // site: {
-          //   user: {
-          //     id: user?.id,
-          //   },
-          // },
+          site: {
+            user: {
+              id: session.user.id,
+            },
+          },
         },
         include: {
           site: true,
@@ -62,9 +61,9 @@ export async function getPost(
     const site = await prisma.site.findFirst({
       where: {
         id: siteId,
-        // user: {
-        //   id: user?.id,
-        // },
+        user: {
+          id: session.user.id,
+        },
       },
     });
 
@@ -104,7 +103,7 @@ export async function getPost(
  */
 export async function createPost(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ): Promise<void | NextApiResponse<{
   postId: string;
 }>> {
@@ -149,7 +148,7 @@ export async function createPost(
  */
 export async function deletePost(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ): Promise<void | NextApiResponse> {
   const { postId } = req.query;
 
@@ -204,7 +203,7 @@ export async function deletePost(
  */
 export async function updatePost(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse
 ): Promise<void | NextApiResponse<Post>> {
   const {
     id,

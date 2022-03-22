@@ -1,91 +1,62 @@
 import Head from "next/head";
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/router";
 import LoadingDots from "@/components/app/loading-dots";
 import toast, { Toaster } from "react-hot-toast";
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { useConnect, useAccount, useNetwork, useSignMessage } from "wagmi";
 import { SiweMessage } from "siwe";
 import { shortAddress } from "@/lib/helpers";
-import useUser from "@/lib/useUser";
-import { appServer } from "config";
+import { useRouter } from "next/router";
 
 const pageTitle = "Login";
 const logo = "/favicon.ico";
-const description =
-  "punk3.xyz is a web3 blogging platform for crypto punks.";
+const description = "punk3.xyz is a web3 blogging platform for crypto punks.";
 export default function Login() {
   const [{ data, error }, connect] = useConnect();
+  const router = useRouter();
+  const { data: session } = useSession();
   const [{ data: accountData, error: aerr, loading: aloading }, disconnect] = useAccount({ fetchEns: true });
   const [loading, setLoading] = useState(false);
   const [{ data: networkData }] = useNetwork();
-  const [state, setState] = useState<{
-    address?: string
-    error?: Error
-    loading?: boolean
-  }>({})
   const [, signMessage] = useSignMessage();
 
-  const signIn = useCallback(async () => {
+  const signInWithSig = useCallback(async () => {
     try {
       const address = accountData?.address;
       const chainId = networkData?.chain?.id;
       if (!address || !chainId) return;
-
-      setState((x) => ({ ...x, error: undefined, loading: true }));
+      setLoading(true);
       // Fetch random nonce, create SIWE message, and sign with wallet
       const nonceRes = await fetch("/api/nonce");
+      const nonceData = await nonceRes.json();
       const message = new SiweMessage({
         domain: window.location.host,
         address,
         statement: "Sign in with Ethereum to the app.",
         uri: window.location.origin,
-        version: "1",
+        version: '1',
         chainId,
-        nonce: await nonceRes.text(),
+        nonce: nonceData['nonce'],
       });
-      const signRes = await signMessage({ message: message.prepareMessage() });
+      const prepareMessage = message.prepareMessage();
+      const signRes = await signMessage({ message: prepareMessage });
       if (signRes.error) throw signRes.error;
-      console.log("signRes success");
+      console.log("signRes success", prepareMessage);
 
       // signin(verify and create user)
-      const signinRes = await fetch("/api/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message, signature: signRes.data }),
-      });
-      if (!signinRes.ok) throw new Error("Error signin");
-      console.log("signin success");
-
-      setState((x) => ({ ...x, address, loading: false }));
+      const signinRes = await signIn('credentials', { message: prepareMessage, signature: signRes.data, redirect: false });
+      if (signinRes.error) {
+        toast.error("Error signin");
+      } else {
+        router.reload();
+      }
+      setLoading(false);
     } catch (error) {
-      console.log("signin error", error);
-      setState((x) => ({ ...x, loading: false }));
+      setLoading(false);
+      toast.error("signin error" + error);
     }
   }, [[accountData, networkData]]);
 
-  // Fetch user when:
-  useEffect(() => {
-    const handler = async () => {
-      try {
-        const res = await fetch("/api/me");
-        const json = await res.json();
-        setState((x) => ({ ...x, address: json.address }));
-      } finally {
-        setState((x) => ({ ...x, loading: false }));
-      }
-    };
-    // 1. page loads
-    (async () => await handler())();
-
-    // 2. window is focused (in case user logs out of another window)
-    window.addEventListener("focus", handler);
-    return () => window.removeEventListener("focus", handler);
-  }, []);
-
-  // Wher user has signed in, redirect to app
-  const { user } = useUser({ redirectTo: appServer, redirectIfFound: true });
 
   useEffect(() => {
     const errorMessage = error?.message;
@@ -189,15 +160,11 @@ export default function Login() {
 
           {accountData && (
             <div className="bg-blue-600 rounded-md">
-              {state.address ? (
+              {session?.user?.address ? (
                 <div>
-                  {/* <div>Signed in as {state.address}</div> */}
                   <button
                     className="group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none bg-black text-white"
-                    onClick={async () => {
-                      await fetch("/api/logout");
-                      setState({});
-                    }}
+                    onClick={()=> signOut()}
                   >
                     Sign Out
                   </button>
@@ -205,8 +172,8 @@ export default function Login() {
               ) : (
                 <button
                   className="group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none btn btn-primary text-white"
-                  disabled={state.loading}
-                  onClick={signIn}
+                  disabled={loading}
+                  onClick={signInWithSig}
                 >
                   Sign-In with Ethereum
                 </button>

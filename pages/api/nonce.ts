@@ -1,4 +1,3 @@
-import withSession from "@/lib/session";
 import { NextApiRequest, NextApiResponse } from "next";
 import { generateNonce } from "siwe";
 
@@ -6,10 +5,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
   switch (method) {
     case "GET":
-      req.session.nonce = generateNonce();
-      await req.session.save();
-      res.setHeader("Content-Type", "text/plain");
-      res.send(req.session.nonce);
+      res.status(200).json({ nonce: generateNonce() });
       break;
     default:
       res.setHeader("Allow", ["GET"]);
@@ -17,4 +13,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withSession(handler);
+export default handler;

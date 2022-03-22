@@ -2,9 +2,10 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import { signOut } from "next-auth/react";
 import Loader from "./Loader";
-import useUser from "@/lib/useUser";
 import { shortAddress } from "@/lib/helpers";
+import useRequireAuth from "../../lib/useRequireAuth";
 
 import type { WithChildren } from "@/types";
 
@@ -25,8 +26,8 @@ export default function Layout({ siteId, children }: LayoutProps) {
     ? router.asPath.split("/")[1]
     : router.asPath.split("/")[3];
 
-  const { user, mutateUser } = useUser({ redirectTo: "/login" });
-  if (!user || !user.isLoggedIn) return <Loader />;
+    const session = useRequireAuth();
+    if (!session) return <Loader />;
 
   return (
     <>
@@ -73,17 +74,14 @@ export default function Layout({ siteId, children }: LayoutProps) {
                     </div>
                   )} */}
                   <span className="sm:block inline-block ml-3 font-medium truncate">
-                    {shortAddress(user?.address)}
+                    {shortAddress(session.user?.name)}
                   </span>
                 </a>
               </Link>
               <div className="h-8 border border-gray-300" />
               <button
                 className="text-gray-500 hover:text-gray-700 transition-all ease-in-out duration-150"
-                onClick={async () => {
-                  await fetch("/api/logout");
-                  router.push("/login");
-                }}
+                onClick={() => signOut()}
               >
                 Logout
               </button>

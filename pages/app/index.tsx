@@ -4,12 +4,12 @@ import BlurImage from "@/components/BlurImage";
 import Modal from "@/components/Modal";
 import LoadingDots from "@/components/app/loading-dots";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { useDebounce } from "use-debounce";
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod } from "@/types"
-import useUser from "@/lib/useUser";
 import { createProfile } from "@/lib/profile";
 
 import type { Site } from "@prisma/client";
@@ -46,11 +46,11 @@ export default function AppIndex() {
 
   const router = useRouter();
 
-  const { user } = useUser({ redirectTo: "/login" });
-  const userId = user?.id;
+  const { data: session } = useSession();
+  const sessionId = session?.user?.id;
 
   const { data: sites } = useSWR<Array<Site>>(
-    userId && `/api/site`,
+    sessionId && `/api/site`,
     fetcher
   );
 
@@ -74,7 +74,7 @@ export default function AppIndex() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: userId,
+        userId: sessionId,
         name: siteNameRef.current?.value,
         subdomain: siteSubdomainRef.current?.value,
         description: siteDescriptionRef.current?.value,
