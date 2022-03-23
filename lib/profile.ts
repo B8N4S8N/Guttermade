@@ -165,5 +165,5 @@ export const profiles = async (request: ProfilesRequest) => {
 
   prettyJSON("profiles: result", profilesFromProfileIds.data);
 
-  return profilesFromProfileIds.data;
+  return profilesFromProfileIds.data.profiles;
 };

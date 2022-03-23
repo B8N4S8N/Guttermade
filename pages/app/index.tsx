@@ -13,6 +13,7 @@ import { HttpMethod } from "@/types"
 import { createProfile } from "@/lib/profile";
 
 import type { Site } from "@prisma/client";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function AppIndex() {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -63,6 +64,8 @@ export default function AppIndex() {
       if (e.message === "HANDLE_TAKEN") {
         setProfileError(name);
         setCreatingSite(false);
+      } else {
+        toast.error("Failed to create profile", e.message);
       }
 
       return;
@@ -259,6 +262,7 @@ export default function AppIndex() {
           )}
         </div>
       </div>
+      <Toaster />
     </Layout>
   );
 }

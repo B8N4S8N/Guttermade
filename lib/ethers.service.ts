@@ -7,6 +7,10 @@ import { omit } from "./helpers";
 
 // getSigner function from injected web3 provider
 export const getSigner = () => {
+  // handle window is not defined
+  if (typeof window === "undefined") {
+    return null;
+  }
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   console.log("provider: ", provider);
   return provider.getSigner();

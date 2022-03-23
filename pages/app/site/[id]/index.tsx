@@ -31,10 +31,9 @@ export default function SiteIndex() {
     siteId && `/api/post?siteId=${siteId}&published=true`,
     fetcher,
     {
-      // TODO
-      // onSuccess: (data) => {
-      //   !data?.site && router.push("/")
-      // },
+      onSuccess: (data) => {
+        !data?.site && router.push("/")
+      },
     }
   );
 
@@ -62,8 +61,8 @@ export default function SiteIndex() {
     const p: any = await profiles(
       { handles: [handle] },
     );
-    if (p.profiles.items.length > 0) {
-      return p.profiles.items[0];
+    if (p.items.length > 0) {
+      return p.items[0];
     }
 
   }

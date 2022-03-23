@@ -7,8 +7,7 @@ import {
   HeartIcon,
 } from "@heroicons/react/outline";
 import { ArchiveIcon, ChatAltIcon, ChevronRightIcon, CodeIcon, CollectionIcon } from "@heroicons/react/solid";
-import { appServer } from "config";
-import { demoServer } from "config";
+import { server, appServer, demoServer } from "config";
 
 const navigation = [
   // {
@@ -110,7 +109,7 @@ export default function Home() {
               </div>
               <div className="hidden md:flex md:items-center md:space-x-6">
                 <a
-                  href={appServer}
+                  href={server("app")}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-base rounded-md shadow bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-medium hover:from-teal-600 hover:to-cyan-700"
                 >
                   Launch App

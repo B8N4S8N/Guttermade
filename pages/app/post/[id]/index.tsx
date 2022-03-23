@@ -4,16 +4,18 @@ import useSWR, { mutate } from "swr";
 import { useDebounce } from "use-debounce";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-
+import { profiles } from "@/lib/profile"
 import Layout from "@/components/app/Layout";
 import Loader from "@/components/app/Loader";
 import LoadingDots from "@/components/app/loading-dots";
+import { createPost } from "@/lib/post";
+import { Toaster } from "react-hot-toast";
+import { uploadIpfs } from "@/lib/ipfs";
+
 import { fetcher } from "@/lib/fetcher";
-import { HttpMethod } from "@/types";
+import { HttpMethod, WithSitePost } from "@/types";
 
-import type { ChangeEvent } from "react";
-
-import type { WithSitePost } from "@/types";
+import { server } from "config";
 
 interface PostData {
   title: string;
@@ -168,35 +170,58 @@ export default function Post() {
     setPublishing(true);
 
     try {
+      // Create Post NFT
+      const pfiles = await profiles(
+        { handles: [post.site.name], limit: 1 },
+      );
+      const metadata = {
+        id: postId,
+        title: data.title,
+        description: data.description,
+        content: data.content,
+        published: true,
+        subdomain: post?.site?.subdomain,
+        customDomain: post?.site?.customDomain,
+        slug: post?.slug,
+      };
+
+      toast.loading("Uploading to IPFS...");
+      const ipfsResult = await uploadIpfs(JSON.stringify(metadata));
+
+      toast.dismiss()
+      toast.loading("Uploading to blockchain...");
+      const tx = await createPost(pfiles.items[0].id, ipfsResult.path);
+      toast.dismiss()
+
+      console.log("create post tx", tx);
+
+      // create post in db
       const response = await fetch(`/api/post`, {
         method: HttpMethod.PUT,
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          id: postId,
-          title: data.title,
-          description: data.description,
-          content: data.content,
-          published: true,
-          subdomain: post?.site?.subdomain,
-          customDomain: post?.site?.customDomain,
-          slug: post?.slug,
+          cid: ipfsResult.cid,
+          ...metadata,
         }),
       });
 
       if (response.ok) {
         mutate(`/api/post?postId=${postId}`);
         router.push(
-          `https://${post?.site?.subdomain}.punk3.xyz/${post?.slug}`
+          `${server(post?.site?.subdomain)}/${post?.slug}`
         );
       }
     } catch (error) {
+      toast.error("Failed to publish", error?.message)
       console.error(error);
     } finally {
+      toast.dismiss()
       setPublishing(false);
     }
   }
+
 
   if (isValidating)
     return (
@@ -274,6 +299,7 @@ export default function Post() {
           </div>
         </footer>
       </Layout>
+      <Toaster />
     </>
   );
 }

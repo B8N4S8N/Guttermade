@@ -6,7 +6,7 @@ A web3 blogging platform for the crypto punks.
 
 ```sh
 # Install dependencies
-yarn
+yarn --ignore-engines
 
 # Create database
 npx prisma db push

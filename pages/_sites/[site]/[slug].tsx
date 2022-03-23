@@ -4,6 +4,8 @@ import { MDXRemote } from "next-mdx-remote";
 import { remark } from "remark";
 import { serialize } from "next-mdx-remote/serialize";
 import { useRouter } from "next/router";
+import { useState } from "react";
+import Modal from "@/components/Modal";
 
 import BlogCard from "@/components/BlogCard";
 import BlurImage from "@/components/BlurImage";
@@ -13,6 +15,9 @@ import Layout from "@/components/sites/Layout";
 import Loader from "@/components/sites/Loader";
 import prisma from "@/lib/prisma";
 import Tweet from "@/components/mdx/Tweet";
+import { shortAddress } from "@/lib/helpers";
+import { server } from "config"
+
 import {
   replaceExamples,
   replaceLinks,
@@ -47,6 +52,7 @@ export default function Post({
 }: PostProps) {
   const router = useRouter();
   if (router.isFallback) return <Loader />;
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const data = JSON.parse(stringifiedData) as _SiteSlugData & {
     mdxSource: MDXRemoteSerializeResult<Record<string, unknown>>;
@@ -59,12 +65,70 @@ export default function Post({
     description: data.description,
     logo: "/logo.png",
     ogImage: data.image,
-    ogUrl: `https://${data.site?.subdomain}.punk3.xyz/${data.slug}`,
+    ogUrl: `${server(data.site?.subdomain)}/${data.slug}`,
     title: data.title,
   } as Meta;
 
   return (
     <Layout meta={meta} subdomain={data.site?.subdomain ?? undefined}>
+      {/* <Modal showModal={showModal} setShowModal={setShowModal}>
+        <div
+          className="inline-block w-full max-w-md pt-8 overflow-hidden text-center align-middle transition-all bg-white shadow-xl rounded-lg"
+        >
+          <div
+            className="col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200"
+          >
+            <div className="flex-1 flex flex-col p-8">
+              <div className="flex flex-row mx-auto items-center justify-between space-x-10">
+                <div className="flex flex-col space-y-3">
+                  <span className="text-gray-900 text-2xl font-extrabold uppercase">{profile?.handle}</span>
+                  <a className="mt-1 text-md font-bold underline"
+                    href={`https://mumbai.polygonscan.com/token/0xd7b3481de00995046c7850bce9a5196b7605c367?a=${parseInt(profile?.id, 16)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Lens NFT #{parseInt(profile?.id, 16)}
+                  </a>
+                </div>
+                <img className="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://files.readme.io/a0959e6-lens-logo1.svg" alt="" />
+              </div>
+              <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Following</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalFollowing}</dd>
+                </div>
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Followers</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalFollowers}</dd>
+                </div>
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Posts</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalPosts}</dd>
+                </div>
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Collects</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalCollects}</dd>
+                </div>
+              </dl>
+
+            </div>
+            <div>
+              <div className="-mt-px flex divide-x divide-gray-200">
+                <div className="w-0 flex-1 flex">
+                  <button
+                    className="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500"
+                    onClick={() => setShowModal(false)}
+                  >
+                    <span className="ml-3">Close</span>
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal> */}
+
       <div className="flex flex-col justify-center items-center">
         <div className="text-center w-full md:w-7/12 m-auto">
           <p className="text-sm md:text-base font-light text-gray-500 w-10/12 m-auto my-5">
@@ -79,12 +143,7 @@ export default function Post({
         </div>
         <a
           target="_blank"
-          // if you are using Github OAuth, you can get rid of the Twitter option
-          href={
-            data.site?.user?.username
-              ? `https://twitter.com/${data.site.user.username}`
-              : `https://github.com/${data.site?.user?.gh_username}`
-          }
+          href={`https://mumbai.polygonscan.com/address/${data.site.user.name}`}
         >
           <div className="my-8">
             <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-full overflow-hidden inline-block align-middle">
@@ -102,7 +161,10 @@ export default function Post({
               )}
             </div>
             <div className="inline-block text-md md:text-lg align-middle ml-3">
-              by <span className="font-semibold">{data.site?.user?.name}</span>
+              by <span className="font-semibold" title={data.site?.user?.name}>{shortAddress(data.site?.user?.name)}</span>
+            </div>
+            <div className="inline-block text-md md:text-lg align-middle ml-3 underline">
+              NFT
             </div>
           </div>
         </a>

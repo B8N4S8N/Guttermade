@@ -6,6 +6,7 @@ import BlogCard from "@/components/BlogCard";
 import Loader from "@/components/sites/Loader";
 import Date from "@/components/Date";
 import prisma from "@/lib/prisma";
+import { shortAddress } from "@/lib/helpers";
 
 import type { GetStaticPaths, GetStaticProps } from "next";
 import type { _SiteData, Meta } from "@/types";
@@ -82,7 +83,7 @@ export default function Index({ stringifiedData }: IndexProps) {
                       )}
                     </div>
                     <p className="inline-block font-semibold text-sm md:text-base align-middle ml-3 whitespace-nowrap">
-                      {data.user?.name}
+                      {shortAddress(data.user?.name)}
                     </p>
                     <div className="border-l border-gray-600 h-6" />
                     <p className="text-sm md:text-base font-light text-gray-500 w-10/12 m-auto my-5">
