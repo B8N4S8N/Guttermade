@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Site } from ".prisma/client";
-import type { User } from "types/user";
+import { Session } from "next-auth";
 
 /**
  * Get Site
@@ -14,12 +14,12 @@ import type { User } from "types/user";
  *
  * @param req - Next.js API Request
  * @param res - Next.js API Response
- * @param user - User
+ * @param session - NextAuth.js session
  */
 export async function getSite(
   req: NextApiRequest,
   res: NextApiResponse,
-  user: User,
+  session: Session,
 ): Promise<void | NextApiResponse<Array<Site> | (Site | null)>> {
   const { siteId } = req.query;
 
@@ -28,10 +28,8 @@ export async function getSite(
       .status(400)
       .end("Bad request. siteId parameter cannot be an array.");
 
-  // TODO: handle sub.localhost
-  if (process.env.NODE_ENV === "production") {
-    if (!user.id) return res.status(500).end("Server failed to get user ID");
-  }
+  if (!session.user.id)
+    return res.status(500).end("Server failed to get user ID");
 
   try {
     if (siteId) {
@@ -39,7 +37,7 @@ export async function getSite(
         where: {
           id: siteId,
           user: {
-            id: user?.id,
+            id: session.user.id,
           },
         },
       });
@@ -50,7 +48,7 @@ export async function getSite(
     const sites = await prisma.site.findMany({
       where: {
         user: {
-          id: user?.id,
+          id: session.user.id,
         },
       },
     });
