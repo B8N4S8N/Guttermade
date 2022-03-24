@@ -743,11 +743,6 @@ export const getPublications = async (profileId: string, limit: number) => {
     throw new Error("Must define PROFILE_ID to run this");
   }
 
-  const address = await getAddressFromSigner();
-
-  await login(address);
-  console.log("getPublicationsRequest", profileId);
-
   // will return latest posts
   const result = await getPublicationsRequest({
     profileId,
@@ -755,6 +750,5 @@ export const getPublications = async (profileId: string, limit: number) => {
     limit,
   });
   prettyJSON("publications: result", result.data);
-
   return result.data.publications;
 };

@@ -89,7 +89,7 @@ export default function Post({
                 <div className="flex flex-col space-y-3">
                   <span className="text-gray-900 text-2xl font-extrabold uppercase">{data.publication?.handle}</span>
                   <a className="mt-1 text-md font-bold underline"
-                    href={`https://mumbai.polygonscan.com/token/0xd7b3481de00995046c7850bce9a5196b7605c367?a=${parseInt(getPubId(data.publication?.id), 16)}`}
+                    href={`https://mumbai.polygonscan.com/token/0xd7b3481de00995046c7850bce9a5196b7605c367`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

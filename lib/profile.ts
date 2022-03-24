@@ -154,13 +154,6 @@ const getProfilesRequest = (request: ProfilesRequest) => {
 };
 
 export const profiles = async (request: ProfilesRequest) => {
-  const address = await getAddressFromSigner();
-  console.log("profiles: address", address);
-
-  await login(address);
-
-  // only showing one example to query but you can see from request
-  // above you can query many
   const profilesFromProfileIds = await getProfilesRequest(request);
 
   prettyJSON("profiles: result", profilesFromProfileIds.data);
