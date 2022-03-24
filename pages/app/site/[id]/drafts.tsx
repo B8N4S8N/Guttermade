@@ -8,8 +8,8 @@ import Layout from "@/components/app/Layout";
 import LoadingDots from "@/components/app/loading-dots";
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod } from "@/types";
-
 import type { Post, Site } from "@prisma/client";
+import { server } from "config";
 
 interface SitePostData {
   posts: Array<Post>;
@@ -62,8 +62,8 @@ export default function SiteDrafts() {
               createPost(siteId as string);
             }}
             className={`${creatingPost
-                ? "cursor-not-allowed bg-gray-300 border-gray-300"
-                : "text-white bg-black hover:bg-white hover:text-black border-black"
+              ? "cursor-not-allowed bg-gray-300 border-gray-300"
+              : "text-white bg-black hover:bg-white hover:text-black border-black"
               } font-cal text-lg w-3/4 sm:w-40 tracking-wide border-2 px-5 py-3 transition-all ease-in-out duration-150`}
           >
             {creatingPost ? (
@@ -105,11 +105,11 @@ export default function SiteDrafts() {
                             "No description provided. Click to edit."}
                         </p>
                         <a
-                          href={`https://${data.site?.subdomain}.punk3.xyz/${post.slug}`}
+                          href={`${server(data.site?.subdomain)}/${post.slug}`}
                           target="_blank"
                           className="font-cal px-3 py-1 tracking-wide rounded bg-gray-200 text-gray-600 absolute bottom-5 left-10 whitespace-nowrap"
                         >
-                          {data.site?.subdomain}.punk3.xyz/{post.slug} ↗
+                          {server(data.site?.subdomain)}/{post.slug} ↗
                         </a>
                       </div>
                     </div>

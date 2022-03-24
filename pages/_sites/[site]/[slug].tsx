@@ -17,6 +17,8 @@ import prisma from "@/lib/prisma";
 import Tweet from "@/components/mdx/Tweet";
 import { shortAddress } from "@/lib/helpers";
 import { server } from "config"
+import { getPublication } from "@/lib/publication";
+import { getPubId } from "@/lib/helpers";
 
 import {
   replaceExamples,
@@ -28,6 +30,8 @@ import type { AdjacentPost, Meta, _SiteSlugData } from "@/types";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import type { ParsedUrlQuery } from "querystring";
+import { UserCircleIcon } from "@heroicons/react/solid";
+import { DocumentReportIcon, UserIcon } from "@heroicons/react/outline";
 
 const components = {
   a: replaceLinks,
@@ -69,9 +73,11 @@ export default function Post({
     title: data.title,
   } as Meta;
 
+  console.log(data)
+
   return (
     <Layout meta={meta} subdomain={data.site?.subdomain ?? undefined}>
-      {/* <Modal showModal={showModal} setShowModal={setShowModal}>
+      <Modal showModal={showModal} setShowModal={setShowModal}>
         <div
           className="inline-block w-full max-w-md pt-8 overflow-hidden text-center align-middle transition-all bg-white shadow-xl rounded-lg"
         >
@@ -81,34 +87,34 @@ export default function Post({
             <div className="flex-1 flex flex-col p-8">
               <div className="flex flex-row mx-auto items-center justify-between space-x-10">
                 <div className="flex flex-col space-y-3">
-                  <span className="text-gray-900 text-2xl font-extrabold uppercase">{profile?.handle}</span>
+                  <span className="text-gray-900 text-2xl font-extrabold uppercase">{data.publication?.handle}</span>
                   <a className="mt-1 text-md font-bold underline"
-                    href={`https://mumbai.polygonscan.com/token/0xd7b3481de00995046c7850bce9a5196b7605c367?a=${parseInt(profile?.id, 16)}`}
+                    href={`https://mumbai.polygonscan.com/token/0xd7b3481de00995046c7850bce9a5196b7605c367?a=${parseInt(getPubId(data.publication?.id), 16)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Lens NFT #{parseInt(profile?.id, 16)}
+                    Publication #{parseInt(getPubId(data.publication?.id), 16)}
                   </a>
                 </div>
                 <img className="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://files.readme.io/a0959e6-lens-logo1.svg" alt="" />
               </div>
               <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-                  <dt className="text-sm font-medium text-gray-500 truncate">Following</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalFollowing}</dd>
-                </div>
-                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-                  <dt className="text-sm font-medium text-gray-500 truncate">Followers</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalFollowers}</dd>
-                </div>
-                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
-                  <dt className="text-sm font-medium text-gray-500 truncate">Posts</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalPosts}</dd>
+                  <dt className="text-sm font-medium text-gray-500 truncate">Mirrors</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{data.publication?.stats.totalAmountOfMirrors}</dd>
                 </div>
                 <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
                   <dt className="text-sm font-medium text-gray-500 truncate">Collects</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{profile?.stats.totalCollects}</dd>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{data.publication?.stats.totalAmountOfCollects}</dd>
                 </div>
+                <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Comments</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{data.publication?.stats.totalAmountOfComments}</dd>
+                </div>
+                {/* <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
+                  <dt className="text-sm font-medium text-gray-500 truncate">Collects</dt>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{data.publication?.stats.totalCollects}</dd>
+                </div> */}
               </dl>
 
             </div>
@@ -127,7 +133,7 @@ export default function Post({
             </div>
           </div>
         </div>
-      </Modal> */}
+      </Modal>
 
       <div className="flex flex-col justify-center items-center">
         <div className="text-center w-full md:w-7/12 m-auto">
@@ -141,9 +147,7 @@ export default function Post({
             {data.description}
           </p>
         </div>
-        <a
-          target="_blank"
-          href={`https://mumbai.polygonscan.com/address/${data.site.user.name}`}
+        <div
         >
           <div className="my-8">
             <div className="relative w-8 h-8 md:w-12 md:h-12 rounded-full overflow-hidden inline-block align-middle">
@@ -160,14 +164,19 @@ export default function Post({
                 </div>
               )}
             </div>
-            <div className="inline-block text-md md:text-lg align-middle ml-3">
+            <a className="inline-block text-md md:text-lg align-middle ml-3"
+              target="_blank"
+              href={`https://mumbai.polygonscan.com/address/${data.site.user.name}`}
+            >
               by <span className="font-semibold" title={data.site?.user?.name}>{shortAddress(data.site?.user?.name)}</span>
-            </div>
-            <div className="inline-block text-md md:text-lg align-middle ml-3 underline">
-              NFT
+            </a>
+            <div className="inline-block text-md md:text-lg align-middle ml-3 underline cursor-pointer w-6 h-auto"
+              onClick={() => setShowModal(true)}
+            >
+              <DocumentReportIcon />
             </div>
           </div>
-        </a>
+        </div>
       </div>
       <div className="relative h-80 md:h-150 w-full max-w-screen-lg lg:2/3 md:w-5/6 m-auto mb-10 md:mb-20 md:rounded-2xl overflow-hidden">
         {data.image ? (
@@ -190,29 +199,33 @@ export default function Post({
         <MDXRemote {...data.mdxSource} components={components} />
       </article>
 
-      {adjacentPosts.length > 0 && (
-        <div className="relative mt-10 sm:mt-20 mb-20">
-          <div
-            className="absolute inset-0 flex items-center"
-            aria-hidden="true"
-          >
-            <div className="w-full border-t border-gray-300" />
+      {
+        adjacentPosts.length > 0 && (
+          <div className="relative mt-10 sm:mt-20 mb-20">
+            <div
+              className="absolute inset-0 flex items-center"
+              aria-hidden="true"
+            >
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="px-2 bg-white text-sm text-gray-500">
+                Continue Reading
+              </span>
+            </div>
           </div>
-          <div className="relative flex justify-center">
-            <span className="px-2 bg-white text-sm text-gray-500">
-              Continue Reading
-            </span>
+        )
+      }
+      {
+        adjacentPosts && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-8 mx-5 lg:mx-12 2xl:mx-auto mb-20 max-w-screen-xl">
+            {adjacentPosts.map((data, index) => (
+              <BlogCard key={index} data={data} />
+            ))}
           </div>
-        </div>
-      )}
-      {adjacentPosts && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-4 gap-y-8 mx-5 lg:mx-12 2xl:mx-auto mb-20 max-w-screen-xl">
-          {adjacentPosts.map((data, index) => (
-            <BlogCard key={index} data={data} />
-          ))}
-        </div>
-      )}
-    </Layout>
+        )
+      }
+    </Layout >
   );
 }
 
@@ -288,6 +301,7 @@ export const getStaticProps: GetStaticProps<PostProps, PathProps> = async ({
     };
   }
 
+  // fetch data in db
   const data = (await prisma.post.findFirst({
     where: {
       site: {
@@ -305,6 +319,11 @@ export const getStaticProps: GetStaticProps<PostProps, PathProps> = async ({
   })) as _SiteSlugData | null;
 
   if (!data) return { notFound: true, revalidate: 10 };
+
+  // fetch publication from lens graphql
+  console.log(data);
+  const publication = await getPublication(data.pubId);
+  console.log(publication);
 
   const [mdxSource, adjacentPosts] = await Promise.all([
     getMdxSource(data.content!),
@@ -333,6 +352,7 @@ export const getStaticProps: GetStaticProps<PostProps, PathProps> = async ({
     props: {
       stringifiedData: JSON.stringify({
         ...data,
+        publication,
         mdxSource,
       }),
       stringifiedAdjacentPosts: JSON.stringify(adjacentPosts),

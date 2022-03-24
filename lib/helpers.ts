@@ -28,3 +28,7 @@ export const sleep = (milliseconds: number): Promise<void> => {
 export const omit = (object: any, name: string) => {
   return omitDeep(object, name);
 };
+
+export const getPubId = (internalID: string): string => {
+  return internalID.split("-")[1];
+};

@@ -70,6 +70,7 @@ model VerificationToken {
 model Post {
   id            String   @id @default(cuid())
   cid           String?  @unique
+  pubId         String?  @unique
   title         String?  @db.Text
   description   String?  @db.Text
   content       String?  @db.LongText

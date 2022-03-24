@@ -10,6 +10,7 @@ import LoadingDots from "@/components/app/loading-dots";
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod } from "@/types";
 import { profiles } from "@/lib/profile";
+import { server } from "config";
 
 import type { Post, Site } from "@prisma/client";
 import { useEffect } from "react";
@@ -193,11 +194,11 @@ export default function SiteIndex() {
                         </p>
                         <a
                           onClick={(e) => e.stopPropagation()}
-                          href={`https://${data.site?.subdomain}.punk3.xyz/${post.slug}`}
+                          href={`${server(data.site?.subdomain)}/${post.slug}`}
                           target="_blank"
                           className="font-cal px-3 py-1 tracking-wide rounded bg-gray-200 text-gray-600 absolute bottom-5 left-10 whitespace-nowrap"
                         >
-                          {data.site?.subdomain}.punk3.xyz/{post.slug} ↗
+                          {server(data.site?.subdomain)}/{post.slug} ↗
                         </a>
                       </div>
                     </div>

@@ -97,13 +97,13 @@ export default function Login() {
         <img
           className="mx-auto h-12 w-auto"
           src="/logo.png"
-          alt="PUNK3"
+          alt="Punk3"
         />
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          PUNK3
+          Punk3
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Build web3 profile with custom domains. <br /> Read the{" "}
+          Build web3 blog with custom domains. <br /> Read the{" "}
           <a
             // href="https://demo.punk3.xyz/platforms-starter-kit"
             target="_blank"
@@ -164,7 +164,7 @@ export default function Login() {
                 <div>
                   <button
                     className="group flex justify-center items-center space-x-5 w-full sm:px-4 h-16 my-2 rounded-md focus:outline-none bg-black text-white"
-                    onClick={()=> signOut()}
+                    onClick={() => signOut()}
                   >
                     Sign Out
                   </button>

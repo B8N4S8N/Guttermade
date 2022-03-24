@@ -7,13 +7,19 @@ import { omit } from "./helpers";
 
 // getSigner function from injected web3 provider
 export const getSigner = () => {
-  // handle window is not defined
   if (typeof window === "undefined") {
-    return null;
+    // server side
+    const privateKey = process.env.PRIVATE_KEY;
+    const provider = new ethers.providers.JsonRpcProvider(
+      process.env.POLYGON_RPC,
+    );
+    const singer = new ethers.Wallet(privateKey, provider);
+    return singer;
+  } else {
+    // client side
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    return provider.getSigner();
   }
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  console.log("provider: ", provider);
-  return provider.getSigner();
 };
 
 export const getAddressFromSigner = () => {

@@ -25,7 +25,7 @@ interface AllPosts {
 export async function getPost(
   req: NextApiRequest,
   res: NextApiResponse,
-  session: Session
+  session: Session,
 ): Promise<void | NextApiResponse<AllPosts | (WithSitePost | null)>> {
   const { postId, siteId, published } = req.query;
 
@@ -103,7 +103,7 @@ export async function getPost(
  */
 export async function createPost(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void | NextApiResponse<{
   postId: string;
 }>> {
@@ -148,7 +148,7 @@ export async function createPost(
  */
 export async function deletePost(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void | NextApiResponse> {
   const { postId } = req.query;
 
@@ -203,10 +203,12 @@ export async function deletePost(
  */
 export async function updatePost(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ): Promise<void | NextApiResponse<Post>> {
   const {
     id,
+    pubId,
+    cid,
     title,
     description,
     content,
@@ -224,6 +226,8 @@ export async function updatePost(
         id: id,
       },
       data: {
+        cid,
+        pubId,
         title,
         description,
         content,

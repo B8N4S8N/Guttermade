@@ -7,6 +7,7 @@ import Loader from "@/components/sites/Loader";
 import Date from "@/components/Date";
 import prisma from "@/lib/prisma";
 import { shortAddress } from "@/lib/helpers";
+import { server } from "config";
 
 import type { GetStaticPaths, GetStaticProps } from "next";
 import type { _SiteData, Meta } from "@/types";
@@ -33,7 +34,7 @@ export default function Index({ stringifiedData }: IndexProps) {
     ogImage: data.image,
     ogUrl: data.customDomain
       ? data.customDomain
-      : `https://${data.subdomain}.punk3.xyz`,
+      : `${server(data.subdomain)}`,
   } as Meta;
 
   return (

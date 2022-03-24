@@ -11,6 +11,7 @@ import { useDebounce } from "use-debounce";
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod } from "@/types"
 import { createProfile } from "@/lib/profile";
+import { server } from "config";
 
 import type { Site } from "@prisma/client";
 import toast, { Toaster } from "react-hot-toast";
@@ -38,7 +39,7 @@ export default function AppIndex() {
         if (available) {
           setError(null);
         } else {
-          setError(`${debouncedSubdomain}.punk3.xyz`);
+          setError(`${server(debouncedSubdomain)}`);
         }
       }
     }
@@ -215,11 +216,11 @@ export default function AppIndex() {
                         </p>
                         <a
                           onClick={(e) => e.stopPropagation()}
-                          href={`https://${site.subdomain}.punk3.xyz`}
+                          href={server(site.subdomain)}
                           target="_blank"
                           className="font-cal px-3 py-1 tracking-wide rounded bg-gray-200 text-gray-600 absolute bottom-5 left-10 whitespace-nowrap"
                         >
-                          {site.subdomain}.punk3.xyz ↗
+                          {server(site.subdomain)} ↗
                         </a>
                       </div>
                     </div>

@@ -8,14 +8,16 @@ import { profiles } from "@/lib/profile"
 import Layout from "@/components/app/Layout";
 import Loader from "@/components/app/Loader";
 import LoadingDots from "@/components/app/loading-dots";
-import { createPost } from "@/lib/post";
+import { createPost, getPublications } from "@/lib/publication";
 import { Toaster } from "react-hot-toast";
 import { uploadIpfs } from "@/lib/ipfs";
+import { v4 as uuidv4 } from 'uuid';
 
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod, WithSitePost } from "@/types";
 
 import { server } from "config";
+import { sleep } from "@/lib/helpers";
 
 interface PostData {
   title: string;
@@ -171,39 +173,67 @@ export default function Post() {
 
     try {
       // Create Post NFT
-      const pfiles = await profiles(
+      const profile = (await profiles(
         { handles: [post.site.name], limit: 1 },
-      );
+      )).items[0];
+      // const pps = await getPublications(profile.id, 1)
+      // console.log(pps)
+      // return
+
+
+      const uuid = uuidv4();
       const metadata = {
-        id: postId,
-        title: data.title,
+        version: '1.0.0',
+        metadata_id: uuid,
         description: data.description,
         content: data.content,
-        published: true,
-        subdomain: post?.site?.subdomain,
-        customDomain: post?.site?.customDomain,
-        slug: post?.slug,
+        external_url: post?.site?.subdomain,
+        image: null,
+        imageMimeType: null,
+        name: data.title,
+        attributes: [],
+        media: [
+          // {
+          //   item: 'https://scx2.b-cdn.net/gfx/news/hires/2018/lion.jpg',
+          //   // item: 'https://assets-global.website-files.com/5c38aa850637d1e7198ea850/5f4e173f16b537984687e39e_AAVE%20ARTICLE%20website%20main%201600x800.png',
+          //   type: 'image/jpeg',
+          // },
+        ],
+        appId: uuid,
       };
-
       toast.loading("Uploading to IPFS...");
       const ipfsResult = await uploadIpfs(JSON.stringify(metadata));
 
       toast.dismiss()
-      toast.loading("Uploading to blockchain...");
-      const tx = await createPost(pfiles.items[0].id, ipfsResult.path);
-      toast.dismiss()
+      toast.loading("Uploading to polygon...");
+      const tx = await createPost(profile.id, ipfsResult.path);
+      toast.success("Post has uploaded to polygon!");
 
-      console.log("create post tx", tx);
+      let publication;
+      while (publication === undefined) {
+        const publications = await getPublications(profile.id, 1)
+        publication = publications.items.find((p: any) => p.appId === uuid)
+        console.log("publication", publication)
+        sleep(1000)
+      }
 
-      // create post in db
+      // Create post in db
       const response = await fetch(`/api/post`, {
         method: HttpMethod.PUT,
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cid: ipfsResult.cid,
-          ...metadata,
+          id: postId,
+          cid: ipfsResult.cid.toString(),
+          pubId: publication.id,
+          title: data.title,
+          description: data.description,
+          content: data.content,
+          published: true,
+          subdomain: post?.site?.subdomain,
+          customDomain: post?.site?.customDomain,
+          slug: post?.slug,
         }),
       });
 
