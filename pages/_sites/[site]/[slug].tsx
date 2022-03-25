@@ -67,7 +67,7 @@ export default function Post({
 
   const meta = {
     description: data.description,
-    logo: "/logo.png",
+    logo: "/logo.svg",
     ogImage: data.image,
     ogUrl: `${server(data.site?.subdomain)}/${data.slug}`,
     title: data.title,

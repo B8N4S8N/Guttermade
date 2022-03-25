@@ -41,13 +41,13 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
     }
   }, [closeModal]);
 
-  const onFollow = async (userId:string) => {
+  const onFollow = async (userId: string) => {
     try {
       await follow(userId);
     } catch (e: any) {
       toast.error('Follow Error' + e.message);
     }
-   
+
   }
   return (
     <div>
@@ -81,32 +81,32 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
       </Head>
       <div
         className={`fixed w-full ${scrolled ? "drop-shadow-md" : ""
-          }  top-0 left-0 right-0 h-16 bg-white z-30 transition-all ease duration-150 flex justify-between items-center px-4 sm:px-20 max-w-4xl mx-auto`}
+          }  top-0 left-0 right-0 h-16 bg-white z-30 transition-all ease duration-150 flex`}
       >
-        <div className="flex justify-center items-center space-x-5 h-full">
-          <Link href="/" passHref>
-            <a className="flex justify-center items-center">
-              {meta?.logo && (
-                <div className="h-8 w-8 inline-block rounded-full overflow-hidden align-middle">
-                  <Image
-                    alt={meta?.title}
-                    height={40}
-                    src={meta?.logo}
-                    width={40}
-                  />
-                </div>
-              )}
-              <span className="inline-block ml-3 font-medium truncate">
-                {meta?.title}
-              </span>
-            </a>
-          </Link>
-        </div>
-        {     
-        accountData ? 
-          <button
-            onClick={() => onFollow(meta?.userId)}
-            className="inline-block font-cal tracking-wide text-white bg-black border-black border-2 px-2 py-1 hover:bg-white hover:text-black transition-all ease-in-out duration-150"
+        <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
+          <div className="flex justify-center items-center space-x-5">
+            <Link href="/" passHref>
+              <a className="flex justify-center items-center">
+                {meta?.logo && (
+                  <div className="h-8 w-8 inline-block overflow-hidden align-middle">
+                    <Image
+                      alt={meta?.title}
+                      src={meta?.logo}
+                      height={40}
+                      width={40}
+                    />
+                  </div>
+                )}
+                <span className="inline-block ml-3 font-medium truncate">
+                  {meta?.title}
+                </span>
+              </a>
+            </Link>
+          </div>
+          {accountData ?
+            <button
+              onClick={() => onFollow(meta?.userId)}
+              className="inline-block font-cal tracking-wide text-white bg-black border-black border-2 px-2 py-1 hover:bg-white hover:text-black transition-all ease-in-out duration-150"
             >
               Follow
             </button> :
@@ -119,9 +119,8 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
               <span className="text-base text-gray-200">
                 MetaMask
               </span>
-            </button>
-          }
-       
+            </button>}
+        </div>
       </div>
 
       <div className="mt-20">{children}</div>
@@ -192,7 +191,7 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
           </div>
         </div>
       )}
-      <Toaster/>
+      <Toaster />
     </div>
   );
 }

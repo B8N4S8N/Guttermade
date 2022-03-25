@@ -30,7 +30,7 @@ export default function Index({ stringifiedData }: IndexProps) {
   const meta = {
     title: data.name,
     description: data.description,
-    logo: "/logo.png",
+    logo: "/logo.svg",
     ogImage: data.image,
     ogUrl: data.customDomain
       ? data.customDomain
