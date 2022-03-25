@@ -21,7 +21,7 @@ const navigation = [
   // },
   {
     name: "Discord",
-    href: "#",
+    href: "https://discord.gg/Ck5uxsMPKj",
     icon: (props: any) => (
       <svg
         fill="currentColor"
@@ -34,7 +34,7 @@ const navigation = [
   },
   {
     name: "GitHub",
-    href: "#",
+    href: "https://github.com/punk3lab/punk3",
     icon: (props: any) => (
       <svg fill="currentColor" viewBox="0 0 24 24" {...props}>
         <path
