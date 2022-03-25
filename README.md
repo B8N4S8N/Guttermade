@@ -77,18 +77,19 @@ yarn --ignore-engines
 Set up your MySQL database(ex: PlanetScale)
 
 ```sh
-## Prerequisite: You need to have the PlanetScale CLI installed. https://docs.planetscale.com/concepts/planetscale-environment-setup
-## Create a new account with PlanetScale.
-## Using the PlanetScale CLI, create a new database called platforms.
-pscale db create platforms
+# Prerequisite: You need to have the PlanetScale CLI installed. https://docs.planetscale.com/concepts/planetscale-environment-setup
+# Create a new account with PlanetScale.
+# Using the PlanetScale CLI, create a new database called punk3.
+pscale db create punk3
 
-## Next, connect to the database branch:
-## pscale connect platforms main --port 3309
-## In a different terminal window, use the db push command to push the schema defined in prisma/schema.prisma:
+# Next, connect to the database branch:
+pscale connect punk3 main
+
+# In a different terminal window, use the db push command to push the schema defined in prisma/schema.prisma:
 npx prisma db push
 
 ## Now that the initial schema has been added, promote your main branch to production:
-pscale branch promote platforms main
+pscale branch promote punk3 main
 ```
 
 Get PlanetScale [connection](https://docs.planetscale.com/concepts/connection-strings)
