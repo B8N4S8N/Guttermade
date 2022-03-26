@@ -10,7 +10,7 @@ import useSWR from "swr";
 import { useDebounce } from "use-debounce";
 import { fetcher } from "@/lib/fetcher";
 import { HttpMethod } from "@/types"
-import { createProfile } from "@/lib/profile";
+import { createProfile, profiles } from "@/lib/profile";
 import { server } from "config";
 
 import type { Site } from "@prisma/client";
@@ -57,9 +57,19 @@ export default function AppIndex() {
   );
 
   async function createSite() {
+    let profileId;
     try {
-      const profile = await createProfile(siteNameRef.current?.value || "")
-      console.log("profile created", profile);
+      if (!siteNameRef.current) {
+        throw new Error("Missing required siteName");
+      }
+      // create profile
+      const res = await createProfile(siteNameRef.current?.value)
+      console.log("profile created", res);
+      // query profile
+      const profile = (await profiles(
+        { handles: [siteNameRef.current?.value] },
+      )).items[0];
+      profileId = profile.id;
     } catch (e: any) {
       console.log("create profile error", e);
       if (e.message === "HANDLE_TAKEN") {
@@ -79,6 +89,7 @@ export default function AppIndex() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        profileId,
         userId: sessionId,
         name: siteNameRef.current?.value,
         subdomain: siteSubdomainRef.current?.value,

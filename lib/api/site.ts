@@ -81,13 +81,14 @@ export async function createSite(
 ): Promise<void | NextApiResponse<{
   siteId: string;
 }>> {
-  const { name, subdomain, description, userId } = req.body;
+  const { name, subdomain, description, userId, profileId } = req.body;
 
   const sub = subdomain.replace(/[^a-zA-Z0-9/-]+/g, "");
 
   try {
     const response = await prisma.site.create({
       data: {
+        profileId: profileId,
         name: name,
         description: description,
         subdomain: sub.length > 0 ? sub : cuid(),

@@ -728,7 +728,6 @@ const GET_PUBLICATIONS = `
 
 // TODO types
 const getPublicationsRequest = (getPublicationQuery: any) => {
-  // await apolloClient.cache.reset();
   return apolloClient.query({
     query: gql(GET_PUBLICATIONS),
     variables: {

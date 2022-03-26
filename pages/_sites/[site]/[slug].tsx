@@ -71,9 +71,8 @@ export default function Post({
     ogImage: data.image,
     ogUrl: `${server(data.site?.subdomain)}/${data.slug}`,
     title: data.title,
+    profileId: data.site?.profileId,
   } as Meta;
-
-  console.log(data)
 
   return (
     <Layout meta={meta} subdomain={data.site?.subdomain ?? undefined}>

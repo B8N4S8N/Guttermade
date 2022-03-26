@@ -88,6 +88,7 @@ model Post {
 
 model Site {
   id            String   @id @default(cuid())
+  profileId     String   @unique
   name          String?
   description   String?  @db.Text
   logo          String?

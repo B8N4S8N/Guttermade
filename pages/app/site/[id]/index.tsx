@@ -47,7 +47,6 @@ export default function SiteIndex() {
         },
       });
 
-      console.log("res", res);
       if (res.ok) {
         const data = await res.json();
         console.log("data", data)
@@ -73,7 +72,6 @@ export default function SiteIndex() {
       const handle = data?.site?.name;
       if (handle) {
         const profile = await getProfile(handle);
-        console.log("p", profile)
         setProfile(profile)
       }
     }
