@@ -4,7 +4,7 @@ import { MDXRemote } from "next-mdx-remote";
 import { remark } from "remark";
 import { serialize } from "next-mdx-remote/serialize";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 
 import BlogCard from "@/components/BlogCard";
@@ -19,6 +19,8 @@ import { shortAddress } from "@/lib/helpers";
 import { server } from "config"
 import { getPublication } from "@/lib/publication";
 import { getPubId } from "@/lib/helpers";
+import LoadingDots from "@/components/app/loading-dots";
+import { collect } from "@/lib/collect";
 
 import {
   replaceExamples,
@@ -32,6 +34,8 @@ import type { MDXRemoteSerializeResult } from "next-mdx-remote";
 import type { ParsedUrlQuery } from "querystring";
 import { UserCircleIcon } from "@heroicons/react/solid";
 import { DocumentReportIcon, UserIcon } from "@heroicons/react/outline";
+import toast from "react-hot-toast";
+import { approveModule } from "@/lib/approve";
 
 const components = {
   a: replaceLinks,
@@ -57,6 +61,11 @@ export default function Post({
   const router = useRouter();
   if (router.isFallback) return <Loader />;
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [showSubmodal, setShowSubmodal] = useState<boolean>(false);
+  const [users, setUsers] = useState([]);
+  const [collecting, setCollecting] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [publication, setPublication]: any = useState(null);
 
   const data: any = JSON.parse(stringifiedData) as _SiteSlugData & {
     mdxSource: MDXRemoteSerializeResult<Record<string, unknown>>;
@@ -74,6 +83,40 @@ export default function Post({
     profileId: data.site?.profileId,
   } as Meta;
 
+  useEffect(() => {
+    // fetch publication from lens graphql
+    async function fetchPublication() {
+      const p = await getPublication(data.pubId);
+      setPublication(p);
+      console.log(publication);
+    }
+    fetchPublication();
+  }, [collecting])
+
+  const onCollect = async () => {
+    setCollecting(true);
+    try {
+      // approve fee module
+      await toast.promise(approveModule(), {
+        loading: "Approving fee...",
+        success: "Fee approved!",
+        error: "Fee approval failed!",
+      })
+
+      // collect post
+      await toast.promise(collect(publication.id), {
+        loading: "Collecting post...",
+        success: "Post collected!",
+        error: "Post collection failed!",
+      })
+    } catch (e: any) {
+      toast.error(e.message);
+      setError(e.message);
+    }
+    setCollecting(false);
+  }
+
+
   return (
     <Layout meta={meta} subdomain={data.site?.subdomain ?? undefined}>
       <Modal showModal={showModal} setShowModal={setShowModal}>
@@ -86,13 +129,13 @@ export default function Post({
             <div className="flex-1 flex flex-col p-8">
               <div className="flex flex-row mx-auto items-center justify-between space-x-10">
                 <div className="flex flex-col space-y-3">
-                  <span className="text-gray-900 text-2xl font-extrabold uppercase">{data.publication?.handle}</span>
+                  <span className="text-gray-900 text-2xl font-extrabold uppercase">{publication?.handle}</span>
                   <a className="mt-1 text-md font-bold underline"
                     href={`https://mumbai.polygonscan.com/token/0xd7b3481de00995046c7850bce9a5196b7605c367`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Publication #{parseInt(getPubId(data.publication?.id), 16)}
+                    Publication #{parseInt(getPubId(publication?.id), 16)}
                   </a>
                 </div>
                 <img className="w-32 h-32 flex-shrink-0 mx-auto rounded-full" src="https://files.readme.io/a0959e6-lens-logo1.svg" alt="" />
@@ -100,35 +143,78 @@ export default function Post({
               <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
                   <dt className="text-sm font-medium text-gray-500 truncate">Mirrors</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{data.publication?.stats.totalAmountOfMirrors}</dd>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{publication?.stats.totalAmountOfMirrors}</dd>
                 </div>
                 <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
                   <dt className="text-sm font-medium text-gray-500 truncate">Collects</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{data.publication?.stats.totalAmountOfCollects}</dd>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{publication?.stats.totalAmountOfCollects}</dd>
                 </div>
                 <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
                   <dt className="text-sm font-medium text-gray-500 truncate">Comments</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{data.publication?.stats.totalAmountOfComments}</dd>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{publication?.stats.totalAmountOfComments}</dd>
                 </div>
                 {/* <div className="px-4 py-5 bg-white shadow rounded-lg overflow-hidden sm:p-6">
                   <dt className="text-sm font-medium text-gray-500 truncate">Collects</dt>
-                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{data.publication?.stats.totalCollects}</dd>
+                  <dd className="mt-1 text-3xl font-semibold text-gray-900">{publication?.stats.totalCollects}</dd>
                 </div> */}
               </dl>
 
             </div>
-            <div>
-              <div className="-mt-px flex divide-x divide-gray-200">
-                <div className="w-0 flex-1 flex">
-                  <button
-                    className="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 font-medium border border-transparent rounded-bl-lg hover:text-gray-500"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="ml-3">Close</span>
-                  </button>
-                </div>
+            <div className="flex justify-between items-center mt-5 w-full">
+              <button
+                type="button"
+                className="w-full px-5 py-5 text-sm text-gray-600 hover:text-black border-t border-gray-300 rounded-bl focus:outline-none focus:ring-0 transition-all ease-in-out duration-150"
+                onClick={() => {
+                  setError(null)
+                  setShowModal(false);
+                }}
+              >
+                CANCEL
+              </button>
 
-              </div>
+              <button
+                type="submit"
+                disabled={collecting || error !== null}
+                onClick={() => onCollect()}
+                className={`${collecting || error
+                  ? "cursor-not-allowed text-gray-400 bg-gray-50"
+                  : "bg-white text-gray-600 hover:text-black"
+                  } w-full px-5 py-5 text-sm border-t border-l border-gray-300 rounded-br focus:outline-none focus:ring-0 transition-all ease-in-out duration-150`}
+              >
+                {collecting ? <LoadingDots /> : "COLLECT"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+      <Modal showModal={showSubmodal} setShowModal={setShowSubmodal}>
+        <div
+          className="inline-block w-full max-w-md pt-8 overflow-hidden text-center align-middle transition-all bg-white shadow-xl rounded-lg"
+        >
+          <div
+            className="col-span-1 flex flex-col text-center bg-white rounded-lg shadow divide-y divide-gray-200"
+          >
+            <ul role="list" className="divide-y divide-gray-200">
+              {users.map((user: any) => (
+                <li key={user.address} className="py-4 flex">
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-900">{user.address}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex justify-between items-center mt-5 w-full">
+              <button
+                type="button"
+                className="w-full px-5 py-5 text-sm text-gray-600 hover:text-black border-t border-gray-300 rounded-bl focus:outline-none focus:ring-0 transition-all ease-in-out duration-150 uppercase"
+                onClick={() => {
+                  setError(null)
+                  setShowModal(false);
+                }}
+              >
+                close
+              </button>
             </div>
           </div>
         </div>
@@ -319,9 +405,6 @@ export const getStaticProps: GetStaticProps<PostProps, PathProps> = async ({
 
   if (!data) return { notFound: true, revalidate: 10 };
 
-  // fetch publication from lens graphql
-  const publication = await getPublication(data.pubId);
-
   const [mdxSource, adjacentPosts] = await Promise.all([
     getMdxSource(data.content!),
     prisma.post.findMany({
@@ -349,7 +432,6 @@ export const getStaticProps: GetStaticProps<PostProps, PathProps> = async ({
     props: {
       stringifiedData: JSON.stringify({
         ...data,
-        publication,
         mdxSource,
       }),
       stringifiedAdjacentPosts: JSON.stringify(adjacentPosts),

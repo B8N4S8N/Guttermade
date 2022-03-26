@@ -72,17 +72,17 @@ export const createPost = async (profileId: string, ipfsPath: string) => {
     profileId,
     contentURI: "ipfs://" + ipfsPath,
     collectModule: {
-      // feeCollectModule: {
-      //   amount: {
-      //     currency: currencies.enabledModuleCurrencies.map(
-      //       (c: any) => c.address,
-      //     )[0],
-      //     value: "0.000001",
-      //   },
-      //   recipient: address,
-      //   referralFee: 10.5,
-      // },
-      revertCollectModule: true,
+      feeCollectModule: {
+        amount: {
+          currency: currencies.enabledModuleCurrencies.map(
+            (c: any) => c.address,
+          )[0],
+          value: "0.000001",
+        },
+        recipient: address,
+        referralFee: 10.5,
+      },
+      // revertCollectModule: true,
       // limitedFeeCollectModule: {
       //   amount: {
       //     currency: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
@@ -422,6 +422,7 @@ const getPublicationRequest = (publicationId: string) => {
         publicationId,
       },
     },
+    fetchPolicy: "no-cache",
   });
 };
 

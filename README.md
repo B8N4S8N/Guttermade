@@ -120,7 +120,3 @@ Punk3 is built on following awesome open source projects:
 ## Community
 
 [Join the discord](https://discord.gg/Ck5uxsMPKj) to get help, ask questions, and discuss features.
-
-```
-
-```

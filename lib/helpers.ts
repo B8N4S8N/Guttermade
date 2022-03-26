@@ -14,8 +14,8 @@ export const truncate = (str: string, num: number) => {
 };
 
 export const shortAddress = (addr: string | null | undefined) => {
-  if (!addr) return "";
-  return addr.slice(0, 6) + "..." + addr.slice(-4);
+  if (!addr) return "punk";
+  return addr.length < 8 ? addr : `${addr.slice(0, 4)}...${addr.slice(-4)}`;
 };
 
 export const prettyJSON = (message: string, obj: string) => {
@@ -31,5 +31,6 @@ export const omit = (object: any, name: string) => {
 };
 
 export const getPubId = (internalID: string): string => {
+  if (!internalID) return "";
   return internalID.split("-")[1];
 };
