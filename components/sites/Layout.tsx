@@ -34,7 +34,6 @@ export default function Layout({ meta, children, subdomain }: LayoutProps) {
   }, [onScroll]);
 
   useEffect(() => {
-    console.log(888)
     async function checkFollow() {
       if (!accountData?.address || !meta?.profileId) return;
       const followers = await doesFollow(accountData?.address, meta.profileId);

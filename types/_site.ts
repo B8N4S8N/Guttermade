@@ -13,7 +13,6 @@ export interface _SiteData extends Site {
 
 export interface _SiteSlugData extends Post {
   site: _SiteSite | null;
-  publication: any;
 }
 
 interface _SiteSite extends Site {
