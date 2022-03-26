@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useState, useEffect, useCallback } from "react";
 import LoadingDots from "@/components/app/loading-dots";
 import toast, { Toaster } from "react-hot-toast";
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { getCsrfToken, signIn, signOut, useSession } from 'next-auth/react';
 import { useConnect, useAccount, useNetwork, useSignMessage } from "wagmi";
 import { SiweMessage } from "siwe";
 import { shortAddress } from "@/lib/helpers";
@@ -27,8 +27,7 @@ export default function Login() {
       if (!address || !chainId) return;
       setLoading(true);
       // Fetch random nonce, create SIWE message, and sign with wallet
-      const nonceRes = await fetch("/api/nonce");
-      const nonceData = await nonceRes.json();
+      const nonce = await getCsrfToken();
       const message = new SiweMessage({
         domain: window.location.host,
         address,
@@ -36,7 +35,7 @@ export default function Login() {
         uri: window.location.origin,
         version: '1',
         chainId,
-        nonce: nonceData['nonce'],
+        nonce,
       });
       const prepareMessage = message.prepareMessage();
       const signRes = await signMessage({ message: prepareMessage });
