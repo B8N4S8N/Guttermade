@@ -101,7 +101,7 @@ export const collect = async (publicationId: string) => {
   // wait for tx to be indexed
   await pollUntilIndexed(tx.hash);
 
-  console.log("collect transactoin has been indexed", tx.hash);
+  console.log("collect transaction has been indexed", tx.hash);
 
   return tx.hash;
 };
