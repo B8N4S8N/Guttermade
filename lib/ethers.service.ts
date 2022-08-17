@@ -13,8 +13,8 @@ export const getSigner = () => {
     const provider = new ethers.providers.JsonRpcProvider(
       process.env.POLYGON_RPC,
     );
-    const singer = new ethers.Wallet(privateKey, provider);
-    return singer;
+    const signer = new ethers.Wallet(privateKey, provider);
+    return signer;
   } else {
     // client side
     const p: any = window.ethereum;
