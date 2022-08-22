@@ -21,7 +21,7 @@
 
 ## Introduction
 
-GutterMade is the world's first open source, trademarked, brand that wants to be fully used by you. Sales from your art+our brand=liquidity. 
+GutterMade is the world's first open source, trademarked, brand that wants to be fully owned by you.  The user.  When you connect with us you connect with a worldwide network of quality curated manufacturers and distributors of quality products.  Every item is made upon order, so every piece is custom made for your customer. 
 
 Multi-tenant applications serve multiple customers across different subdomains/custom domains with a single unified codebase.
 
@@ -113,7 +113,15 @@ guttermade is built on following awesome open source projects:
 - [Lens](https://lens.dev/) as the decentralized social graph
 - [Apollo](https://www.apollographql.com/) for GraphQL
 - [SWR](https://swr.now.sh/) for data fetching
-
+- [Stripe](https://stripe.com/) for fiat payment processing and card issuing
+- [SnipCart](https://snipcart.com/) for automatic cart management
+- [Balancer](https://docs.balancer.fi/products/balancer-pools/managed-pools) for DAO liquidty management with AAVE boosted automated index funds with Circuit Breakers to protect from malicious/compromised tokens
+- [AAVE](https://aave.com/) for lending and borrowing
+- [Polygon](https://polygon.technology/) for blockchain speed, performance, and privacy
+- [Chainlink](https://chain.link/) for randomness, oracles, and off chain data in order to automate transactions and facilitate buyers/sellers lotteries 
+- []()
+- []()
+- []()
 ## Contributing
 
 [Open an issue](https://github.com/b8n4s8n/guttermade/issues) if you believe you've encountered a bug with the starter kit.
