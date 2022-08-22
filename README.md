@@ -1,12 +1,13 @@
+
 <p align="center">
   <a href="https://demo.punk3.xyz">
-    <img src="./public/logo-full.png" height="96">
+    <img src="https://scontent-sea1-1.xx.fbcdn.net/v/t39.30808-6/298663900_1074036903505410_8493396802770755566_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=zdJwqaYZG1QAX9R7gAC&_nc_ht=scontent-sea1-1.xx&oh=00_AT-T0wCw-qcWSoJUBQ-BliDmh7e1cbm3dSEL3osno2mHrQ&oe=63087DD3" height="96">
     <h3 align="center">GutterMade</h3>
   </a>
 </p>
 
 <p align="center">
-  Web3 blogging platform for crypto punks
+  Welcome to the world's first fully user owned De-Commerce platform, supported by sales from the world's first fully open source yet trademarked brand.
 </p>
 
 <p align="center">
@@ -20,7 +21,7 @@
 
 ## Introduction
 
-Punk3 is a web3-based blogging platform for crypto punks.
+GutterMade is the world's first open source, trademarked, brand that wants to be fully used by you. Sales from your art+our brand=liquidity. 
 
 Multi-tenant applications serve multiple customers across different subdomains/custom domains with a single unified codebase.
 
@@ -79,17 +80,17 @@ Set up your MySQL database(ex: PlanetScale)
 ```sh
 # Prerequisite: You need to have the PlanetScale CLI installed. https://docs.planetscale.com/concepts/planetscale-environment-setup
 # Create a new account with PlanetScale.
-# Using the PlanetScale CLI, create a new database called punk3.
-pscale db create punk3
+# Using the PlanetScale CLI, create a new database called guttermade.
+pscale db create guttermade
 
 # Next, connect to the database branch:
-pscale connect punk3 main
+pscale connect guttermade main
 
 # In a different terminal window, use the db push command to push the schema defined in prisma/schema.prisma:
 npx prisma db push
 
 ## Now that the initial schema has been added, promote your main branch to production:
-pscale branch promote punk3 main
+pscale branch promote guttermade main
 ```
 
 Get PlanetScale [connection](https://docs.planetscale.com/concepts/connection-strings)
@@ -98,7 +99,7 @@ Get PlanetScale [connection](https://docs.planetscale.com/concepts/connection-st
 
 ## Built on open source
 
-Punk3 is built on following awesome open source projects:
+guttermade is built on following awesome open source projects:
 
 - [Next.js](https://nextjs.org/) as the React framework
 - [Tailwind](https://tailwindcss.com/) for CSS styling
@@ -115,8 +116,8 @@ Punk3 is built on following awesome open source projects:
 
 ## Contributing
 
-[Open an issue](https://github.com/punk3lab/punk3/issues) if you believe you've encountered a bug with the starter kit.
+[Open an issue](https://github.com/b8n4s8n/guttermade/issues) if you believe you've encountered a bug with the starter kit.
 
 ## Community
 
-[Join the discord](https://discord.gg/Ck5uxsMPKj) to get help, ask questions, and discuss features.
+[Join the discord](https://discord.com/channels/1004884408517537912/1004884410962804737) to get help, ask questions, and discuss features.
