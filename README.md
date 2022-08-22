@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://demo.punk3.xyz">
     <img src="./public/logo-full.png" height="96">
-    <h3 align="center">PUNK3</h3>
+    <h3 align="center">GutterMade</h3>
   </a>
 </p>
 
