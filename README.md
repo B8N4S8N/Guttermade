@@ -119,7 +119,7 @@ guttermade is built on following awesome open source projects:
 - [AAVE](https://aave.com/) for lending and borrowing
 - [Polygon](https://polygon.technology/) for blockchain speed, performance, and privacy
 - [Chainlink](https://chain.link/) for randomness, oracles, and off chain data in order to automate transactions and facilitate buyers/sellers lotteries 
-- []()
+- [Headlessdropshipping](https://headlessdropshipping.com/) for the store stack
 - []()
 - []()
 ## Contributing
