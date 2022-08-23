@@ -128,4 +128,4 @@ guttermade is built on following awesome open source projects:
 
 ## Community
 
-[Join the discord](https://discord.com/channels/1004884408517537912/1004884410962804737) to get help, ask questions, and discuss features.
+[Join the discord](https://discord.gg/hSpfBehp) to get help, ask questions, and discuss features.
